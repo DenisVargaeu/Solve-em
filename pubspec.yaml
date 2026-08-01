@@ -1,0 +1,50 @@
+name: ai_photomat
+description: "Solve 'em - an AI-powered math learning assistant. Photograph a math problem and get step-by-step solutions, or get your own work checked."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  provider: ^6.1.2
+
+  # Camera & image handling
+  camera: ^0.11.0+2
+  image_picker: ^1.1.2
+  image_cropper: ^12.2.1
+  image: ^4.5.2
+
+  # OCR
+  google_mlkit_text_recognition: ^0.14.0
+
+  # Local storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.5.2
+  path_provider: ^2.1.5
+
+  # Networking
+  http: ^1.4.0
+
+  # Math rendering
+  flutter_math_fork: ^0.7.2
+
+  # Utilities
+  intl: ^0.20.2
+  uuid: ^4.5.1
+  url_launcher: ^6.3.1
+  flutter_markdown: ^0.7.7+1
+  markdown: ^7.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
