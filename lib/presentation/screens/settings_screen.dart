@@ -13,6 +13,7 @@ import '../state/app_controller.dart';
 import '../state/history_controller.dart';
 import '../state/settings_controller.dart';
 import '../widgets/model_picker_sheet.dart';
+import 'about_screen.dart';
 import 'privacy_policy_screen.dart';
 
 /// Settings screen: AI provider configuration, API key, theme, privacy.
@@ -63,7 +64,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        actions: [
+          IconButton(
+            tooltip: 'About',
+            icon: const Icon(Icons.info_outline_rounded),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const AboutScreen()),
+            ),
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         children: [
