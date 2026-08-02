@@ -1,30 +1,52 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
-import 'package:ai_photomat/main.dart';
+import 'package:ai_photomat/domain/entities/ai_settings.dart';
+import 'package:ai_photomat/domain/repositories/settings_repository.dart';
+import 'package:ai_photomat/presentation/screens/home_screen.dart';
+import 'package:ai_photomat/presentation/state/settings_controller.dart';
+
+class _FakeSettingsRepository implements SettingsRepository {
+  @override
+  Future<AiSettings> loadAiSettings() async => const AiSettings();
+
+  @override
+  Future<void> saveAiSettings(AiSettings settings) async {}
+
+  @override
+  Future<String> loadThemeMode() async => 'system';
+
+  @override
+  Future<void> saveThemeMode(String mode) async {}
+
+  @override
+  Future<bool> loadOcrEnabled() async => true;
+
+  @override
+  Future<void> saveOcrEnabled(bool enabled) async {}
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Home screen renders hero and mode cards',
+      (WidgetTester tester) async {
+    final controller = SettingsController(_FakeSettingsRepository());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpWidget(
+      ChangeNotifierProvider.value(
+        value: controller,
+        child: const MaterialApp(home: HomeScreen()),
+      ),
+    );
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text("Solve 'em"), findsOneWidget);
+    expect(find.text('Snap it.\nSolved it.'), findsOneWidget);
+    expect(find.text('Start solving'), findsOneWidget);
+    expect(find.text('AI Mode'), findsOneWidget);
+    expect(find.text('Control'), findsOneWidget);
+    expect(find.text('Chat'), findsOneWidget);
+    expect(find.text('No AI'), findsOneWidget);
+    expect(find.text('Add an API key to unlock AI modes'), findsOneWidget);
   });
 }
