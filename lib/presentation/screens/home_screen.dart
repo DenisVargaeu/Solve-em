@@ -18,7 +18,9 @@ import 'settings_screen.dart';
 
 /// Home screen: animated hero, mode grid and quick access.
 ///
-/// Sections fade in with a gentle cascade when the screen opens.
+/// Sections fade in with a gentle cascade when the screen opens. Components
+/// follow Material 3 conventions: tonal Cards, filled buttons, Chips and
+/// color-role driven surfaces.
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -130,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Snap & solve',
                   description: 'Full step-by-step solutions from a photo.',
                   icon: Icons.auto_awesome_rounded,
-                  colors: const [AppColors.aiViolet, AppColors.aiVioletLight],
+                  accent: AppColors.aiViolet,
                   onTap: () =>
                       _open(context, CameraScreen(mode: SolveMode.ai)),
                 ),
@@ -142,10 +144,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Check your work',
                   description: 'Score your written solution instantly.',
                   icon: Icons.fact_check_rounded,
-                  colors: const [
-                    AppColors.controlTeal,
-                    AppColors.controlTealLight,
-                  ],
+                  accent: AppColors.controlTeal,
                   onTap: () => _open(
                     context,
                     CameraScreen(mode: SolveMode.control),
@@ -166,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Ask a tutor',
                   description: 'Free-form math help, no photo needed.',
                   icon: Icons.forum_rounded,
-                  colors: const [AppColors.chatPink, AppColors.chatPinkLight],
+                  accent: AppColors.chatPink,
                   onTap: () => _open(context, const ChatScreen()),
                 ),
               ),
@@ -177,10 +176,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Offline tools',
                   description: 'Calculator, formulas and notes offline.',
                   icon: Icons.menu_book_rounded,
-                  colors: const [
-                    AppColors.noAiAmber,
-                    AppColors.noAiAmberLight,
-                  ],
+                  accent: AppColors.noAiAmber,
                   onTap: () => _open(context, const NoAiHomeScreen()),
                 ),
               ),
@@ -205,6 +201,7 @@ class _BrandBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
     return Row(
       children: [
@@ -214,19 +211,17 @@ class _BrandBar extends StatelessWidget {
             children: [
               Text(
                 AppConstants.appName,
-                style: TextStyle(
+                style: text.titleLarge?.copyWith(
                   fontWeight: FontWeight.w800,
-                  fontSize: 20,
                   letterSpacing: -0.3,
                   color: scheme.onSurface,
                 ),
               ),
               Text(
                 AppConstants.tagline,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
+                style: text.bodySmall?.copyWith(
                   color: scheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -302,49 +297,16 @@ class _HeroPanelState extends State<_HeroPanel>
           _FloatingSymbols(controller: _float),
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 26, 24, 26),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 28),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(999),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.auto_awesome_rounded,
-                          size: 14,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 6),
-                        Text(
-                          'AI-powered math sidekick',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const _HeroChip(),
                   const Spacer(),
-                  const Text(
+                  Text(
                     'Snap it.\nSolved it.',
-                    style: TextStyle(
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
                       color: Colors.white,
-                      fontSize: 34,
-                      height: 1.08,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -0.6,
                     ),
@@ -358,22 +320,37 @@ class _HeroPanelState extends State<_HeroPanel>
                       height: 1.4,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
                   Row(
                     children: [
-                      _CameraCta(onTap: widget.onSolve),
+                      IconButton.filled(
+                        onPressed: widget.onSolve,
+                        icon: const Icon(Icons.camera_alt_rounded),
+                        iconSize: 32,
+                        tooltip: 'Start solving',
+                        style: IconButton.styleFrom(
+                          minimumSize: const Size.square(74),
+                          backgroundColor: Colors.white,
+                          foregroundColor: scheme.primary,
+                          elevation: 6,
+                          shadowColor: Colors.black.withValues(alpha: 0.35),
+                          shape: const CircleBorder(),
+                        ),
+                      ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Start solving',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                             ),
                             Text(
                               'Tap the camera and snap a problem',
@@ -402,6 +379,35 @@ class _HeroPanelState extends State<_HeroPanel>
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Material 3 [Chip] used as the hero label.
+class _HeroChip extends StatelessWidget {
+  const _HeroChip();
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      avatar: const Icon(
+        Icons.auto_awesome_rounded,
+        size: 16,
+        color: Colors.white,
+      ),
+      label: const Text('AI-powered math sidekick'),
+      labelStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+      ),
+      labelPadding: EdgeInsets.zero,
+      backgroundColor: Colors.white.withValues(alpha: 0.2),
+      side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+      visualDensity: VisualDensity.compact,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }
@@ -524,44 +530,6 @@ class _Symbol extends StatelessWidget {
   }
 }
 
-/// Large circular camera shutter button that anchors the primary action.
-class _CameraCta extends StatelessWidget {
-  const _CameraCta({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Material(
-      color: Colors.white,
-      shape: const CircleBorder(),
-      elevation: 6,
-      shadowColor: Colors.black.withValues(alpha: 0.35),
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const CircleBorder(),
-        child: Container(
-          width: 74,
-          height: 74,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: scheme.primary.withValues(alpha: 0.15),
-              width: 3,
-            ),
-          ),
-          child: Icon(
-            Icons.camera_alt_rounded,
-            size: 34,
-            color: scheme.primary,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// Sine-wave cutout that transitions the hero into the page background.
 class _WavePainter extends CustomPainter {
   const _WavePainter({required this.color});
@@ -577,8 +545,7 @@ class _WavePainter extends CustomPainter {
     path.moveTo(0, h);
     path.lineTo(0, h * 0.45);
     for (double x = 0; x <= w; x += 1) {
-      final y = h * 0.45 +
-          math.sin(x / w * math.pi * 2) * (h * 0.22);
+      final y = h * 0.45 + math.sin(x / w * math.pi * 2) * (h * 0.22);
       path.lineTo(x, y);
     }
     path.lineTo(w, h);
@@ -590,7 +557,7 @@ class _WavePainter extends CustomPainter {
   bool shouldRepaint(_WavePainter oldDelegate) => oldDelegate.color != color;
 }
 
-/// Compact card showing the AI provider readiness.
+/// Material 3 tonal [Card] showing the AI provider readiness.
 class _AiStatusCard extends StatelessWidget {
   const _AiStatusCard({required this.configured});
 
@@ -601,12 +568,11 @@ class _AiStatusCard extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final settings = context.watch<SettingsController>();
 
-    return Material(
+    return Card(
       color: configured
-          ? scheme.primaryContainer.withValues(alpha: 0.5)
-          : scheme.errorContainer.withValues(alpha: 0.55),
-      borderRadius: BorderRadius.circular(18),
-      child: InkWell(
+          ? scheme.secondaryContainer
+          : scheme.errorContainer,
+      child: ListTile(
         onTap: configured
             ? null
             : () => Navigator.of(context).push(
@@ -614,45 +580,36 @@ class _AiStatusCard extends StatelessWidget {
                     builder: (_) => const SettingsScreen(),
                   ),
                 ),
-        borderRadius: BorderRadius.circular(18),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-          child: Row(
-            children: [
-              Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: configured ? AppColors.success : scheme.error,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  configured
-                      ? '${settings.providerLabel} • ${_model(settings)}'
-                      : 'Add an API key to unlock AI modes',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: configured
-                        ? scheme.onPrimaryContainer
-                        : scheme.onErrorContainer,
-                  ),
-                ),
-              ),
-              if (!configured)
-                const Icon(Icons.chevron_right_rounded, size: 20),
-            ],
+        leading: Icon(
+          configured
+              ? Icons.check_circle_rounded
+              : Icons.warning_amber_rounded,
+          color: configured
+              ? scheme.onSecondaryContainer
+              : scheme.onErrorContainer,
+        ),
+        title: Text(
+          configured
+              ? '${settings.providerLabel} • ${_model(settings)}'
+              : 'Add an API key to unlock AI modes',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: configured
+                ? scheme.onSecondaryContainer
+                : scheme.onErrorContainer,
           ),
         ),
+        trailing: configured
+            ? null
+            : Icon(Icons.chevron_right_rounded),
       ),
     );
   }
 
-  String _model(SettingsController settings) =>
-      settings.settings.model.isEmpty ? 'default model' : settings.settings.model;
+  String _model(SettingsController settings) => settings.settings.model.isEmpty
+      ? 'default model'
+      : settings.settings.model;
 }
 
 /// Section heading with a short accent bar.
@@ -663,6 +620,7 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
     return Row(
       children: [
@@ -677,8 +635,7 @@ class _SectionTitle extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           title,
-          style: TextStyle(
-            fontSize: 17,
+          style: text.titleMedium?.copyWith(
             fontWeight: FontWeight.w700,
             color: scheme.onSurface,
             letterSpacing: -0.2,
@@ -689,14 +646,14 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-/// Full-gradient mode card for the 2-column grid.
+/// Material 3 tonal [Card] for the 2-column mode grid.
 class _ModeCard extends StatelessWidget {
   const _ModeCard({
     required this.title,
     required this.tagline,
     required this.description,
     required this.icon,
-    required this.colors,
+    required this.accent,
     required this.onTap,
   });
 
@@ -704,87 +661,73 @@ class _ModeCard extends StatelessWidget {
   final String tagline;
   final String description;
   final IconData icon;
-  final List<Color> colors;
+  final Color accent;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
+    final text = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+    final background = Color.alphaBlend(
+      accent.withValues(alpha: 0.07),
+      scheme.surfaceContainerLow,
+    );
+
+    return Card(
+      color: background,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: colors,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: colors.last.withValues(alpha: 0.35),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(icon, color: accent, size: 26),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    Icons.arrow_outward_rounded,
+                    color: scheme.onSurfaceVariant,
+                    size: 20,
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Text(
+                title,
+                style: text.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                tagline,
+                style: text.labelLarge?.copyWith(
+                  color: accent,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                description,
+                style: text.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                  height: 1.3,
+                ),
               ),
             ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 46,
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.22),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Icon(icon, color: Colors.white, size: 26),
-                    ),
-                    const Spacer(),
-                    Icon(
-                      Icons.arrow_outward_rounded,
-                      color: Colors.white.withValues(alpha: 0.9),
-                      size: 20,
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.2,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  tagline,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 7),
-                Text(
-                  description,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.92),
-                    fontSize: 12,
-                    height: 1.3,
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
@@ -836,6 +779,7 @@ class _QuickRow extends StatelessWidget {
   }
 }
 
+/// Material 3 tonal [Card] used as a quick-access tile.
 class _QuickTile extends StatelessWidget {
   const _QuickTile({
     required this.icon,
@@ -849,33 +793,29 @@ class _QuickTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
-    return Material(
-      color: scheme.surfaceContainerLow,
-      borderRadius: BorderRadius.circular(20),
-      elevation: 1,
-      shadowColor: scheme.shadow.withValues(alpha: 0.3),
+    return Card(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
-                  color: scheme.primaryContainer.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(13),
+                  color: scheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icon, color: scheme.primary, size: 22),
+                child: Icon(icon, color: scheme.onSecondaryContainer, size: 22),
               ),
               const SizedBox(height: 8),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 13,
+                style: text.labelMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: scheme.onSurface,
                 ),
