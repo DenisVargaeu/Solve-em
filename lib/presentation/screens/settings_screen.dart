@@ -289,6 +289,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
                 ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.text_fields_rounded),
+                      const SizedBox(width: 16),
+                      const Expanded(
+                        child: Text(
+                          'Text size',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      SegmentedButton<double>(
+                        showSelectedIcon: false,
+                        segments: const [
+                          ButtonSegment(value: 0.85, label: Text('Small')),
+                          ButtonSegment(value: 1.0, label: Text('Default')),
+                          ButtonSegment(value: 1.15, label: Text('Large')),
+                        ],
+                        selected: {appController.textScale},
+                        onSelectionChanged: (selection) {
+                          appController.setTextScale(selection.first);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                SwitchListTile(
+                  secondary: const Icon(Icons.motion_photos_off_rounded),
+                  title: const Text('Reduce motion'),
+                  subtitle: const Text(
+                    'Turn off decorative animations and motion effects.',
+                  ),
+                  value: appController.reduceMotion,
+                  onChanged: appController.setReduceMotion,
+                ),
               ],
             ),
           ),

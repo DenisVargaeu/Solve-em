@@ -56,4 +56,20 @@ class SettingsRepositoryImpl implements SettingsRepository {
   @override
   Future<void> saveOcrEnabled(bool enabled) async =>
       _prefs.setBool(AppConstants.prefsKeyOcrEnabled, enabled);
+
+  @override
+  Future<double> loadTextScale() async =>
+      _prefs.getDouble(AppConstants.prefsKeyTextScale) ?? 1.0;
+
+  @override
+  Future<void> saveTextScale(double scale) async =>
+      _prefs.setDouble(AppConstants.prefsKeyTextScale, scale);
+
+  @override
+  Future<bool> loadReduceMotion() async =>
+      _prefs.getBool(AppConstants.prefsKeyReduceMotion) ?? false;
+
+  @override
+  Future<void> saveReduceMotion(bool enabled) async =>
+      _prefs.setBool(AppConstants.prefsKeyReduceMotion, enabled);
 }

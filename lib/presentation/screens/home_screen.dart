@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
 import '../../domain/entities/ai_provider.dart';
+import '../state/app_controller.dart';
 import '../state/settings_controller.dart';
 import 'camera_screen.dart';
 import 'chat_screen.dart';
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _entrance(Interval interval, Widget child) {
+    if (context.watch<AppController>().reduceMotion) return child;
     final curved = CurvedAnimation(
       parent: _entranceController,
       curve: interval,
@@ -79,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen>
               _entrance(
                 const Interval(0.0, 0.45),
                 _HeroPanel(
+                  reduceMotion: context.watch<AppController>().reduceMotion,
                   onSolve: () =>
                       _open(context, CameraScreen(mode: SolveMode.ai)),
                 ),
@@ -244,8 +247,9 @@ class _BrandBar extends StatelessWidget {
 
 /// Animated hero panel with a large camera CTA and a wave-cut bottom.
 class _HeroPanel extends StatefulWidget {
-  const _HeroPanel({required this.onSolve});
+  const _HeroPanel({required this.reduceMotion, required this.onSolve});
 
+  final bool reduceMotion;
   final VoidCallback onSolve;
 
   @override
@@ -257,7 +261,24 @@ class _HeroPanelState extends State<_HeroPanel>
   late final AnimationController _float = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 7),
-  )..repeat();
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.reduceMotion) _float.repeat();
+  }
+
+  @override
+  void didUpdateWidget(covariant _HeroPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.reduceMotion == widget.reduceMotion) return;
+    if (widget.reduceMotion) {
+      _float.stop();
+    } else {
+      _float.repeat();
+    }
+  }
 
   @override
   void dispose() {

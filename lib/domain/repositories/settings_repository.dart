@@ -22,4 +22,16 @@ abstract interface class SettingsRepository {
 
   /// Persists the OCR enabled flag.
   Future<void> saveOcrEnabled(bool enabled);
+
+  /// Loads the app-wide text scale factor (1.0 = default).
+  Future<double> loadTextScale();
+
+  /// Persists the text scale factor.
+  Future<void> saveTextScale(double scale);
+
+  /// Whether animations/motion are reduced.
+  Future<bool> loadReduceMotion();
+
+  /// Persists the reduce-motion flag.
+  Future<void> saveReduceMotion(bool enabled);
 }

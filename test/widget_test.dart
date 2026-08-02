@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:ai_photomat/domain/entities/ai_settings.dart';
 import 'package:ai_photomat/domain/repositories/settings_repository.dart';
 import 'package:ai_photomat/presentation/screens/home_screen.dart';
+import 'package:ai_photomat/presentation/state/app_controller.dart';
 import 'package:ai_photomat/presentation/state/settings_controller.dart';
 
 class _FakeSettingsRepository implements SettingsRepository {
@@ -25,6 +26,18 @@ class _FakeSettingsRepository implements SettingsRepository {
 
   @override
   Future<void> saveOcrEnabled(bool enabled) async {}
+
+  @override
+  Future<double> loadTextScale() async => 1.0;
+
+  @override
+  Future<void> saveTextScale(double scale) async {}
+
+  @override
+  Future<bool> loadReduceMotion() async => false;
+
+  @override
+  Future<void> saveReduceMotion(bool enabled) async {}
 }
 
 void main() {
@@ -33,8 +46,13 @@ void main() {
     final controller = SettingsController(_FakeSettingsRepository());
 
     await tester.pumpWidget(
-      ChangeNotifierProvider.value(
-        value: controller,
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: controller),
+          ChangeNotifierProvider.value(
+            value: AppController(_FakeSettingsRepository())..init(),
+          ),
+        ],
         child: const MaterialApp(home: HomeScreen()),
       ),
     );

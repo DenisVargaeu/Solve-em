@@ -68,6 +68,12 @@ class SolveEmApp extends StatelessWidget {
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: app.themeMode,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(app.textScale),
+            ),
+            child: child!,
+          ),
           home: const SplashScreen(),
         ),
       ),
