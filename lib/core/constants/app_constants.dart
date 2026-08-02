@@ -15,6 +15,9 @@ abstract final class AppConstants {
   /// Short tagline used on the home screen and empty states.
   static const String tagline = 'Snap it. Understand it. Master it.';
 
+  /// Current app version, shown in Settings.
+  static const String appVersion = '1.4.0';
+
   /// Storage key of the Hive box that persists solved problems.
   static const String problemsBoxName = 'problems';
 

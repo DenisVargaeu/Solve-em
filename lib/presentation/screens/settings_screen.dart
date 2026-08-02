@@ -13,6 +13,7 @@ import '../state/app_controller.dart';
 import '../state/history_controller.dart';
 import '../state/settings_controller.dart';
 import '../widgets/model_picker_sheet.dart';
+import 'privacy_policy_screen.dart';
 
 /// Settings screen: AI provider configuration, API key, theme, privacy.
 
@@ -66,116 +67,136 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         children: [
-          const _SectionLabel('AI provider'),
-          const SizedBox(height: 8),
+          const _AppHeader(),
+          const SizedBox(height: 24),
 
-          // ── Provider selector ───────────────────────────────────────────
-          SegmentedButton<AiProvider>(
-            segments: AiProvider.values
-                .map(
-                  (p) => ButtonSegment(
-                    value: p,
-                    label: Text(switch (p) {
-                      AiProvider.openai => 'OpenAI',
-                      AiProvider.gemini => 'Gemini',
-                      AiProvider.openrouter => 'OpenRouter',
-                      AiProvider.nvidia => 'NVIDIA',
-                    }),
+          // ── AI provider ─────────────────────────────────────────────────
+          const _SectionTitle('AI provider', Icons.auto_awesome_rounded),
+          const SizedBox(height: 12),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SegmentedButton<AiProvider>(
+                    showSelectedIcon: false,
+                    segments: AiProvider.values
+                        .map(
+                          (p) => ButtonSegment(
+                            value: p,
+                            label: Text(switch (p) {
+                              AiProvider.openai => 'OpenAI',
+                              AiProvider.gemini => 'Gemini',
+                              AiProvider.openrouter => 'OpenRouter',
+                              AiProvider.nvidia => 'NVIDIA',
+                            }),
+                          ),
+                        )
+                        .toList(),
+                    selected: {settings.provider},
+                    onSelectionChanged: (selection) {
+                      final provider = selection.first;
+                      final model =
+                          AppConstants.defaultModelByProvider[provider.id] ?? '';
+                      settingsController.update(
+                        settings.copyWith(
+                          provider: provider,
+                          model: model,
+                          baseUrl: switch (provider) {
+                            AiProvider.openai => AppConstants.defaultBaseUrl,
+                            AiProvider.openrouter =>
+                              AppConstants.openRouterBaseUrl,
+                            AiProvider.nvidia => AppConstants.nvidiaBaseUrl,
+                            AiProvider.gemini => '',
+                          },
+                        ),
+                      );
+                    },
                   ),
-                )
-                .toList(),
-            selected: {settings.provider},
-            onSelectionChanged: (selection) {
-              final provider = selection.first;
-              final model =
-                  AppConstants.defaultModelByProvider[provider.id] ?? '';
-              settingsController.update(
-                settings.copyWith(
-                  provider: provider,
-                  model: model,
-                  baseUrl: switch (provider) {
-                    AiProvider.openai => AppConstants.defaultBaseUrl,
-                    AiProvider.openrouter => AppConstants.openRouterBaseUrl,
-                    AiProvider.nvidia => AppConstants.nvidiaBaseUrl,
-                    AiProvider.gemini => '',
-                  },
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'API keys are stored only on your device. Model limits, pricing '
-            'and privacy policies depend on your provider.',
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // ── API key ─────────────────────────────────────────────────────
-          TextField(
-            controller: _apiKeyController,
-            obscureText: _obscureKey,
-            autocorrect: false,
-            enableSuggestions: false,
-            decoration: InputDecoration(
-              labelText: 'API key',
-              hintText: 'sk-…',
-              prefixIcon: const Icon(Icons.key_rounded),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscureKey
-                      ? Icons.visibility_off_rounded
-                      : Icons.visibility_rounded,
-                ),
-                onPressed: () => setState(() => _obscureKey = !_obscureKey),
+                  const SizedBox(height: 12),
+                  Text(
+                    'API keys are stored only on your device. Model limits, '
+                    'pricing and privacy policies depend on your provider.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      height: 1.4,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ),
-            onChanged: (_) => _markDirty(settingsController),
           ),
           const SizedBox(height: 12),
 
-          // ── Model ───────────────────────────────────────────────────────
-          TextField(
-            controller: _modelController,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              labelText: 'Model',
-              hintText: 'e.g. gpt-4o-mini, gemini-2.0-flash',
-              prefixIcon: Icon(Icons.smart_toy_rounded),
-            ),
-            onChanged: (_) => _markDirty(settingsController),
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () => _openModelPicker(settingsController),
-              icon: const Icon(Icons.download_rounded, size: 18),
-              label: const Text('Browse available models'),
-            ),
-          ),
-          const SizedBox(height: 4),
-
-          // ── Base URL (OpenAI-compatible) ────────────────────────────────
-          if (settings.provider == AiProvider.openai ||
-              settings.provider == AiProvider.openrouter ||
-              settings.provider == AiProvider.nvidia) ...[
-            TextField(
-              controller: _baseUrlController,
-              autocorrect: false,
-              decoration: const InputDecoration(
-                labelText: 'Base URL (advanced)',
-                hintText: 'https://api.openai.com/v1',
-                prefixIcon: Icon(Icons.link_rounded),
+          // ── Credentials ─────────────────────────────────────────────────
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _apiKeyController,
+                    obscureText: _obscureKey,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    decoration: InputDecoration(
+                      labelText: 'API key',
+                      hintText: 'sk-…',
+                      prefixIcon: const Icon(Icons.key_rounded),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureKey
+                              ? Icons.visibility_off_rounded
+                              : Icons.visibility_rounded,
+                        ),
+                        onPressed: () =>
+                            setState(() => _obscureKey = !_obscureKey),
+                      ),
+                    ),
+                    onChanged: (_) => _markDirty(settingsController),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _modelController,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Model',
+                      hintText: 'e.g. gpt-4o-mini, gemini-2.0-flash',
+                      prefixIcon: Icon(Icons.smart_toy_rounded),
+                    ),
+                    onChanged: (_) => _markDirty(settingsController),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () => _openModelPicker(settingsController),
+                      icon: const Icon(Icons.download_rounded, size: 18),
+                      label: const Text('Browse available models'),
+                    ),
+                  ),
+                  if (settings.provider == AiProvider.openai ||
+                      settings.provider == AiProvider.openrouter ||
+                      settings.provider == AiProvider.nvidia) ...[
+                    TextField(
+                      controller: _baseUrlController,
+                      autocorrect: false,
+                      decoration: const InputDecoration(
+                        labelText: 'Base URL (advanced)',
+                        hintText: 'https://api.openai.com/v1',
+                        prefixIcon: Icon(Icons.link_rounded),
+                      ),
+                      onChanged: (_) => _markDirty(settingsController),
+                    ),
+                  ],
+                ],
               ),
-              onChanged: (_) => _markDirty(settingsController),
             ),
-            const SizedBox(height: 12),
-          ],
+          ),
+          const SizedBox(height: 12),
 
+          // ── Save / Test ─────────────────────────────────────────────────
           Row(
             children: [
               Expanded(
@@ -203,61 +224,76 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
 
-          const Divider(),
-          const SizedBox(height: 8),
-          const _SectionLabel('Appearance'),
-          const SizedBox(height: 8),
+          // ── Appearance ──────────────────────────────────────────────────
+          const _SectionTitle('Appearance', Icons.palette_outlined),
+          const SizedBox(height: 12),
           Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                children: [
-                  const Icon(Icons.brightness_6_rounded),
-                  const SizedBox(width: 12),
-                  const Expanded(child: Text('Theme')),
-                  DropdownButton<ThemeMode>(
-                    value: appController.themeMode,
-                    underline: const SizedBox.shrink(),
-                    items: const [
-                      DropdownMenuItem(
-                        value: ThemeMode.system,
-                        child: Text('System'),
+            child: Column(
+              children: [
+                SwitchListTile(
+                  secondary: const Icon(Icons.document_scanner_rounded),
+                  title: const Text('On-device OCR'),
+                  subtitle: Text(
+                    settingsController.ocrEnabled
+                        ? 'Reads text from photos and sends only the text to the AI.'
+                        : 'Sends the photo straight to a multimodal model (no OCR).',
+                  ),
+                  value: settingsController.ocrEnabled,
+                  onChanged: settingsController.setOcrEnabled,
+                ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.brightness_6_rounded),
+                      const SizedBox(width: 16),
+                      const Expanded(
+                        child: Text(
+                          'Theme',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
-                      DropdownMenuItem(
-                        value: ThemeMode.light,
-                        child: Text('Light'),
-                      ),
-                      DropdownMenuItem(
-                        value: ThemeMode.dark,
-                        child: Text('Dark'),
+                      SegmentedButton<ThemeMode>(
+                        showSelectedIcon: false,
+                        segments: const [
+                          ButtonSegment(
+                            value: ThemeMode.system,
+                            label: Text('System'),
+                            icon: Icon(Icons.brightness_auto_rounded, size: 18),
+                          ),
+                          ButtonSegment(
+                            value: ThemeMode.light,
+                            label: Text('Light'),
+                            icon: Icon(Icons.light_mode_rounded, size: 18),
+                          ),
+                          ButtonSegment(
+                            value: ThemeMode.dark,
+                            label: Text('Dark'),
+                            icon: Icon(Icons.dark_mode_rounded, size: 18),
+                          ),
+                        ],
+                        selected: {appController.themeMode},
+                        onSelectionChanged: (selection) {
+                          appController.setThemeMode(selection.first);
+                        },
                       ),
                     ],
-                    onChanged: (mode) {
-                      if (mode != null) appController.setThemeMode(mode);
-                    },
                   ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            child: SwitchListTile(
-              secondary: const Icon(Icons.document_scanner_rounded),
-              title: const Text('On-device OCR'),
-              subtitle: Text(
-                settingsController.ocrEnabled
-                    ? 'Reads text from photos and sends only the text to the AI.'
-                    : 'Sends the photo straight to a multimodal model (no OCR).',
-              ),
-              value: settingsController.ocrEnabled,
-              onChanged: settingsController.setOcrEnabled,
+                ),
+              ],
             ),
           ),
           if (!settingsController.ocrEnabled) ...[
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
@@ -270,75 +306,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ],
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
 
-          const Divider(),
-          const SizedBox(height: 8),
-          const _SectionLabel('Privacy & data'),
-          const SizedBox(height: 8),
+          // ── Privacy & data ──────────────────────────────────────────────
+          const _SectionTitle('Privacy & data', Icons.security_rounded),
+          const SizedBox(height: 12),
           Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.shield_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Text(
-                          'Your API key never leaves this device. Photos and '
-                          'solutions are sent only to your chosen AI provider '
-                          'when you analyze a problem, and results are stored '
-                          'locally in the app.',
-                          style: TextStyle(fontSize: 13, height: 1.5),
-                        ),
-                      ),
-                    ],
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.delete_outline_rounded),
+                  title: const Text('Clear API key'),
+                  subtitle: const Text(
+                    'Remove your stored key. You must enter a new one to use AI modes.',
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => _clearKey(settingsController),
-                          icon: const Icon(Icons.delete_outline_rounded),
-                          label: const Text('Clear API key'),
-                        ),
-                      ),
-                    ],
+                  onTap: () => _clearKey(settingsController),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.delete_sweep_rounded),
+                  title: const Text('Clear history'),
+                  subtitle: const Text('Delete every saved problem and solution.'),
+                  onTap: () => _clearHistory(context),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.policy_rounded),
+                  title: const Text('Privacy Policy'),
+                  subtitle: const Text('How the app handles your data.'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const PrivacyPolicyScreen(),
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.delete_sweep_rounded),
-              title: const Text('Clear history'),
-              subtitle: const Text('Delete every saved problem and solution.'),
-              onTap: () => _clearHistory(context),
-            ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
 
-          const Divider(),
-          const SizedBox(height: 8),
           Center(
-            child: Text(
-              '${AppConstants.appName} v1.0.0\nA math learning companion. '
-              'Use your own AI API key.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  '${AppConstants.appName} v${AppConstants.appVersion}',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'A math learning companion. Use your own AI API key.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -421,6 +448,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _clearKey(SettingsController controller) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear API key?'),
+        content: const Text(
+          'The key will be removed from this device. You will need to enter '
+          'a new one to use the AI modes.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
     _apiKeyController.clear();
     await controller.save(_draft(controller).copyWith(apiKey: ''));
     if (!mounted) return;
@@ -459,21 +510,113 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.text);
-
-  final String text;
+/// Compact gradient header with the app identity.
+class _AppHeader extends StatelessWidget {
+  const _AppHeader();
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text.toUpperCase(),
-      style: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 0.8,
-        color: Theme.of(context).colorScheme.primary,
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color.lerp(scheme.primary, const Color(0xFF312E81), 0.35)!,
+            Color.lerp(scheme.primary, scheme.tertiary, 0.55)!,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
       ),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(
+              Icons.calculate_rounded,
+              color: Colors.white,
+              size: 30,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppConstants.appName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  AppConstants.tagline,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.85),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            'v${AppConstants.appVersion}',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.9),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// M3-style section heading with an accent bar and icon.
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.title, this.icon);
+
+  final String title;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 18,
+          decoration: BoxDecoration(
+            color: scheme.primary,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Icon(icon, size: 18, color: scheme.primary),
+        const SizedBox(width: 6),
+        Text(
+          title,
+          style: text.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurface,
+            letterSpacing: -0.2,
+          ),
+        ),
+      ],
     );
   }
 }
