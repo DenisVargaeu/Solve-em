@@ -16,7 +16,7 @@ abstract final class AppConstants {
   static const String tagline = 'Snap it. Understand it. Master it.';
 
   /// Current app version, shown in Settings.
-  static const String appVersion = '1.6.1';
+  static const String appVersion = '1.6.2';
 
   /// Storage key of the Hive box that persists solved problems.
   static const String problemsBoxName = 'problems';
