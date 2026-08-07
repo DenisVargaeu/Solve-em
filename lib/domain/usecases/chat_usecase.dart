@@ -28,7 +28,10 @@ class ChatUseCase {
     return _resolveGateway(params.settings).generate(
       settings: params.settings,
       system: PromptTemplates.withLanguage(
-        PromptTemplates.chatSystem,
+        PromptTemplates.withCustomInstruction(
+          PromptTemplates.chatSystem,
+          params.settings.customInstruction,
+        ),
         params.settings.responseLanguage,
       ),
       userPrompt: PromptTemplates.chatUserPrompt(

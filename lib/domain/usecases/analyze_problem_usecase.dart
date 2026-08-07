@@ -62,7 +62,10 @@ class AnalyzeProblemUseCase {
     final raw = await _resolveGateway(params.settings).generate(
       settings: params.settings,
       system: PromptTemplates.withLanguage(
-        PromptTemplates.systemSolution,
+        PromptTemplates.withCustomInstruction(
+          PromptTemplates.systemSolution,
+          params.settings.customInstruction,
+        ),
         params.settings.responseLanguage,
       ),
       userPrompt: PromptTemplates.solutionUserPrompt(

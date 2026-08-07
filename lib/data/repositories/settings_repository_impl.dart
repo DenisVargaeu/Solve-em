@@ -34,6 +34,8 @@ class SettingsRepositoryImpl implements SettingsRepository {
       requestTimeout:
           _prefs.getInt(AppConstants.prefsKeyRequestTimeout) ??
           AppConstants.defaultRequestTimeout,
+      customInstruction:
+          _prefs.getString(AppConstants.prefsKeyCustomInstruction) ?? '',
     );
   }
 
@@ -53,6 +55,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
     await _prefs.setInt(
       AppConstants.prefsKeyRequestTimeout,
       settings.requestTimeout,
+    );
+    await _prefs.setString(
+      AppConstants.prefsKeyCustomInstruction,
+      settings.customInstruction.trim(),
     );
   }
 

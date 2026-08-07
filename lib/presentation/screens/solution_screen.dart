@@ -3,10 +3,14 @@ library;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/errors/app_exceptions.dart';
 import '../../core/theme/app_dimensions.dart';
+import '../../core/utils/solution_share.dart';
 import '../../domain/entities/solved_problem.dart';
 import '../../domain/services/markdown_solution_parser.dart';
 import '../../domain/usecases/ask_follow_up_usecase.dart';
@@ -43,6 +47,11 @@ class _SolutionScreenState extends State<SolutionScreen> {
       appBar: AppBar(
         title: const Text('Solution'),
         actions: [
+          IconButton(
+            tooltip: 'Share',
+            icon: const Icon(Icons.share_outlined),
+            onPressed: () => _share(),
+          ),
           IconButton(
             tooltip: 'Ask a follow-up question',
             icon: const Icon(Icons.question_answer_rounded),
@@ -154,6 +163,55 @@ class _SolutionScreenState extends State<SolutionScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _share() async {
+    final problem = widget.problem;
+    final action = await showModalBottomSheet<_ShareAction>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => const _ShareSheet(),
+    );
+    if (action == null || !mounted) return;
+
+    switch (action) {
+      case _ShareAction.copy:
+        await Clipboard.setData(
+          ClipboardData(text: SolutionShare.buildText(problem)),
+        );
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Solution copied to clipboard')),
+        );
+      case _ShareAction.text:
+        await SharePlus.instance.share(
+          ShareParams(text: SolutionShare.buildText(problem)),
+        );
+      case _ShareAction.image:
+        await _shareImage(problem);
+    }
+  }
+
+  Future<void> _shareImage(SolvedProblem problem) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final file = File(
+        '${tempDir.path}/solve_em_solution.png',
+      );
+      final bytes = await SolutionShare.renderImage(problem);
+      await file.writeAsBytes(bytes, flush: true);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path, mimeType: 'image/png')],
+        ),
+      );
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not generate the share image')),
+        );
+      }
+    }
   }
 
   Future<void> _askFollowUp() async {
@@ -448,6 +506,61 @@ class _FollowUpAnswerDialog extends StatelessWidget {
           child: const Text('Close'),
         ),
       ],
+    );
+  }
+}
+
+enum _ShareAction { copy, text, image }
+
+/// Bottom sheet asking how the user wants to share the solution.
+class _ShareSheet extends StatelessWidget {
+  const _ShareSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
+              child: Row(
+                children: [
+                  Icon(Icons.share_outlined, color: scheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Share solution',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.copy_all_rounded),
+              title: const Text('Copy as text'),
+              subtitle: const Text('Copy the full solution to the clipboard.'),
+              onTap: () => Navigator.of(context).pop(_ShareAction.copy),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.text_fields_rounded),
+              title: const Text('Share as text'),
+              subtitle: const Text('Send the solution to any app.'),
+              onTap: () => Navigator.of(context).pop(_ShareAction.text),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.image_rounded),
+              title: const Text('Share as image'),
+              subtitle: const Text('A formatted image of the solution.'),
+              onTap: () => Navigator.of(context).pop(_ShareAction.image),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

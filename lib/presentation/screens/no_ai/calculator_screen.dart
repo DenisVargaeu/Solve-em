@@ -25,6 +25,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   String _expression = '';
   String? _error;
 
+  final List<({String expression, String result})> _history = [];
+  bool _showHistory = false;
+
   void _append(String token) {
     setState(() {
       _error = null;
@@ -58,6 +61,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       );
       if (!mounted) return;
       setState(() {
+        _history.insert(
+          0,
+          (expression: _expression.trim(), result: result),
+        );
+        if (_history.length > 30) _history.removeLast();
         _error = null;
         _expression = result;
       });
@@ -80,7 +88,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Calculator')),
+      appBar: AppBar(
+        title: const Text('Calculator'),
+        actions: [
+          IconButton(
+            tooltip: 'Calculation history',
+            icon: Icon(_showHistory ? Icons.close_rounded : Icons.history),
+            onPressed: () => setState(() => _showHistory = !_showHistory),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -119,32 +136,107 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               ),
             ),
 
-            // ── Function row ───────────────────────────────────────────────
+            // ── History tape ───────────────────────────────────────────────
+            if (_showHistory) ...[
+              if (_history.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Center(
+                    child: Text(
+                      'No calculations yet.',
+                      style: TextStyle(color: scheme.onSurfaceVariant),
+                    ),
+                  ),
+                )
+              else
+                SizedBox(
+                  height: 150,
+                  child: ListView.builder(
+                    itemCount: _history.length,
+                    itemBuilder: (context, index) {
+                      final entry = _history[index];
+                      return ListTile(
+                        dense: true,
+                        visualDensity: VisualDensity.compact,
+                        title: Text(entry.expression),
+                        subtitle: Text(
+                          '= ${entry.result}',
+                          style: TextStyle(
+                            color: scheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.arrow_upward, size: 18),
+                          tooltip: 'Use this result',
+                          onPressed: () => setState(() {
+                            _expression = entry.result;
+                            _error = null;
+                            _showHistory = false;
+                          }),
+                        ),
+                        onTap: () => setState(() {
+                          _expression = entry.result;
+                          _error = null;
+                          _showHistory = false;
+                        }),
+                      );
+                    },
+                  ),
+                ),
+            ],
+
+            // ── Function rows ─────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
+              child: Column(
                 children: [
-                  _funcButton('√', () => _append('sqrt(')),
-                  _funcButton('x²', () => _append('^2')),
-                  _funcButton('x³', () => _append('^3')),
-                  _funcButton('π', () => _append('pi')),
-                  _funcButton('!', () => _append('!')),
+                  Row(
+                    children: [
+                      _funcButton('√', () => _append('sqrt(')),
+                      _funcButton('x²', () => _append('^2')),
+                      _funcButton('x³', () => _append('^3')),
+                      _funcButton('π', () => _append('pi')),
+                      _funcButton('!', () => _append('!')),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      _funcButton('sin', () => _append('sin(')),
+                      _funcButton('cos', () => _append('cos(')),
+                      _funcButton('tan', () => _append('tan(')),
+                      _funcButton('ln', () => _append('ln(')),
+                      _funcButton('log', () => _append('log10(')),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      _funcButton('asin', () => _append('asin(')),
+                      _funcButton('acos', () => _append('acos(')),
+                      _funcButton('atan', () => _append('atan(')),
+                      _funcButton('cbrt', () => _append('cbrt(')),
+                      _funcButton('e', () => _append('e')),
+                    ],
+                  ),
                 ],
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(height: 12),
 
-            // ── Main pad ──────────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-              child: GridView.count(
-                crossAxisCount: 4,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                children: [
+            // ── Main pad (fills remaining space, never overflows) ─────────
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                child: GridView.count(
+                  crossAxisCount: 4,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  children: [
                   _padButton(
                     'C',
                     scheme.errorContainer,
@@ -272,6 +364,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 ],
               ),
             ),
+          ),
           ],
         ),
       ),

@@ -38,7 +38,10 @@ class AskFollowUpUseCase {
     return _resolveGateway(params.settings).generate(
       settings: params.settings,
       system: PromptTemplates.withLanguage(
-        "You are Solve 'em, a friendly math tutor.",
+        PromptTemplates.withCustomInstruction(
+          "You are Solve 'em, a friendly math tutor.",
+          params.settings.customInstruction,
+        ),
         params.settings.responseLanguage,
       ),
       userPrompt: PromptTemplates.followUpPrompt(

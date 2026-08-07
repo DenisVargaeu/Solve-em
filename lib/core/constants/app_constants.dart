@@ -16,7 +16,7 @@ abstract final class AppConstants {
   static const String tagline = 'Snap it. Understand it. Master it.';
 
   /// Current app version, shown in Settings.
-  static const String appVersion = '1.7.5';
+  static const String appVersion = '1.7.6';
 
   /// Storage key of the Hive box that persists solved problems.
   static const String problemsBoxName = 'problems';
@@ -35,6 +35,7 @@ abstract final class AppConstants {
   static const String prefsKeyTextScale = 'text_scale';
   static const String prefsKeyReduceMotion = 'reduce_motion';
   static const String prefsKeyRequestTimeout = 'request_timeout';
+  static const String prefsKeyCustomInstruction = 'custom_instruction';
 
   /// Default AI provider. OpenAI-compatible is the most common default.
   static const String defaultProvider = 'openai';

@@ -31,6 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _modelController = TextEditingController();
   final _baseUrlController = TextEditingController();
   final _timeoutController = TextEditingController();
+  final _promptController = TextEditingController();
 
   bool _obscureKey = true;
   bool _testing = false;
@@ -48,6 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _modelController.dispose();
     _baseUrlController.dispose();
     _timeoutController.dispose();
+    _promptController.dispose();
     super.dispose();
   }
 
@@ -56,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _modelController.text = controller.settings.model;
     _baseUrlController.text = controller.settings.baseUrl;
     _timeoutController.text = controller.settings.requestTimeout.toString();
+    _promptController.text = controller.settings.customInstruction;
   }
 
   @override
@@ -235,17 +238,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const SizedBox(height: 12),
                       ],
                       TextField(
-                        controller: _timeoutController,
-                        autocorrect: false,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Request timeout (seconds)',
-                          helperText: 'Default is 60 s. Between 10 and 600.',
-                          prefixIcon: Icon(Icons.timer_outlined),
+                          controller: _timeoutController,
+                          autocorrect: false,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Request timeout (seconds)',
+                            helperText: 'Default is 60 s. Between 10 and 600.',
+                            prefixIcon: Icon(Icons.timer_outlined),
+                          ),
+                          onChanged: (_) => _markDirty(settingsController),
                         ),
-                        onChanged: (_) => _markDirty(settingsController),
-                      ),
-                    ],
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: _promptController,
+                          maxLines: 4,
+                          maxLength: 1000,
+                          decoration: const InputDecoration(
+                            labelText: 'Custom AI instruction (system prompt)',
+                            hintText: 'e.g. Always show two solving methods…',
+                            prefixIcon: Icon(Icons.tune_rounded),
+                            alignLabelWithHint: true,
+                          ),
+                          onChanged: (_) => _markDirty(settingsController),
+                        ),
+                      ],
                   ),
                 ),
               ],
@@ -546,6 +562,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       baseUrl: _baseUrlController.text.trim(),
       responseLanguage: current.responseLanguage,
       requestTimeout: _parseTimeout(),
+      customInstruction: _promptController.text,
     );
   }
 

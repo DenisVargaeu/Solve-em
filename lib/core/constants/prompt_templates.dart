@@ -15,6 +15,21 @@ import '../../domain/entities/response_language.dart';
 abstract final class PromptTemplates {
   PromptTemplates._();
 
+  /// Prepends the user's custom instruction to a system prompt (when set).
+  /// The instruction is kept at the top so the model treats it as a rule that
+  /// overrides the built-in guidance.
+  static String withCustomInstruction(
+    String system,
+    String customInstruction,
+  ) {
+    final custom = customInstruction.trim();
+    if (custom.isEmpty) return system;
+    return '''
+$custom
+
+$system''';
+  }
+
   /// Appends a language instruction to a system prompt telling the model which
   /// language to write its explanation in. English is the default, so no extra
   /// line is added unless a non-English language is selected.
