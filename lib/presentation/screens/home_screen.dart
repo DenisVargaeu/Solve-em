@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/ai_provider.dart';
 import '../state/app_controller.dart';
 import '../state/settings_controller.dart';
@@ -69,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+          padding: AppSpace.screen,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -80,33 +81,45 @@ class _HomeScreenState extends State<HomeScreen>
               const SizedBox(height: 6),
               _entrance(
                 const Interval(0.0, 0.45),
+                _Greeting(configured: configured),
+              ),
+              const SizedBox(height: AppSpace.lg),
+              _entrance(
+                const Interval(0.5, 0.75),
+                _MathSearchBar(
+                  onTap: () => _open(context, const ChatScreen()),
+                ),
+              ),
+              const SizedBox(height: AppSpace.xxl),
+              _entrance(
+                const Interval(0.15, 0.6),
                 _HeroPanel(
                   reduceMotion: context.watch<AppController>().reduceMotion,
                   onSolve: () =>
                       _open(context, CameraScreen(mode: SolveMode.ai)),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpace.lg),
               _entrance(
-                const Interval(0.2, 0.65),
+                const Interval(0.25, 0.7),
                 _AiStatusCard(configured: configured),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: AppSpace.xxxl),
               _entrance(
-                const Interval(0.35, 0.8),
+                const Interval(0.4, 0.85),
                 const _SectionTitle('Explore tools'),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpace.lg),
               _entrance(
                 const Interval(0.45, 0.9),
                 _buildModeGrid(context),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: AppSpace.xxxl),
               _entrance(
                 const Interval(0.6, 1.0),
                 const _SectionTitle('Your space'),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpace.lg),
               _entrance(
                 const Interval(0.7, 1.0),
                 _QuickRow(
@@ -241,6 +254,74 @@ class _BrandBar extends StatelessWidget {
           icon: const Icon(Icons.settings_rounded),
         ),
       ],
+    );
+  }
+}
+
+/// Time-aware welcome line with the configured AI ready state.
+class _Greeting extends StatelessWidget {
+  const _Greeting({required this.configured});
+
+  final bool configured;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    final scheme = Theme.of(context).colorScheme;
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12
+        ? 'Good morning'
+        : hour < 17
+        ? 'Good afternoon'
+        : 'Good evening';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          greeting,
+          style: text.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: scheme.onSurface,
+            letterSpacing: -0.5,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          configured
+              ? 'What would you like to figure out today?'
+              : 'Ready whenever you are — add an API key to go AI.',
+          style: text.bodyMedium?.copyWith(
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Material 3 [SearchBar] that routes to the AI chat tutor.
+class _MathSearchBar extends StatelessWidget {
+  const _MathSearchBar({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SearchBar(
+      onTap: onTap,
+      elevation: const WidgetStatePropertyAll(0),
+      leading: const Icon(Icons.search_rounded),
+      hintText: 'Ask a math question…',
+      trailing: [
+        IconButton(
+          tooltip: 'Ask',
+          onPressed: onTap,
+          icon: const Icon(Icons.auto_awesome_rounded),
+        ),
+      ],
+      backgroundColor: WidgetStatePropertyAll(
+        Theme.of(context).colorScheme.surfaceContainerHigh,
+      ),
     );
   }
 }
@@ -425,7 +506,9 @@ class _HeroChip extends StatelessWidget {
       labelPadding: EdgeInsets.zero,
       backgroundColor: Colors.white.withValues(alpha: 0.2),
       side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadii.pill),
+      ),
       visualDensity: VisualDensity.compact,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -698,7 +781,7 @@ class _ModeCard extends StatelessWidget {
       color: background,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppRadii.xl),
         child: Padding(
           padding: const EdgeInsets.all(18),
           child: Column(
@@ -712,7 +795,7 @@ class _ModeCard extends StatelessWidget {
                     height: 46,
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppRadii.lg),
                     ),
                     child: Icon(icon, color: accent, size: 26),
                   ),
@@ -819,7 +902,7 @@ class _QuickTile extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppRadii.xl),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Column(
@@ -829,7 +912,7 @@ class _QuickTile extends StatelessWidget {
                 height: 42,
                 decoration: BoxDecoration(
                   color: scheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppRadii.lg),
                 ),
                 child: Icon(icon, color: scheme.onSecondaryContainer, size: 22),
               ),
