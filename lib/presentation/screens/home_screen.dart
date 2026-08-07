@@ -18,11 +18,11 @@ import 'no_ai/no_ai_home_screen.dart';
 import 'no_ai/notes_screen.dart';
 import 'settings_screen.dart';
 
-/// Home screen: animated hero, mode grid and quick access.
+/// Home screen: a bold hero, meaningful quick actions and a mode hub.
 ///
-/// Sections fade in with a gentle cascade when the screen opens. Components
-/// follow Material 3 conventions: tonal Cards, filled buttons, Chips and
-/// color-role driven surfaces.
+/// The layout is built around a large "start" hero with two clear paths
+/// (solve with the camera / ask the tutor), a compact capability strip, and a
+/// reshaped tool grid. Elements cascade in with a gentle entrance animation.
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _entranceController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 900),
+    duration: const Duration(milliseconds: 950),
   )..forward();
 
   @override
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
       opacity: curved,
       child: SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(0, 0.05),
+          begin: const Offset(0, 0.06),
           end: Offset.zero,
         ).animate(curved),
         child: child,
@@ -74,49 +74,43 @@ class _HomeScreenState extends State<HomeScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _BrandBar(
+              _BrandHeader(
                 onHistory: () => _open(context, const HistoryScreen()),
                 onSettings: () => _open(context, const SettingsScreen()),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpace.lg),
               _entrance(
-                const Interval(0.0, 0.45),
+                const Interval(0.0, 0.4),
                 _Greeting(configured: configured),
               ),
               const SizedBox(height: AppSpace.lg),
               _entrance(
-                const Interval(0.5, 0.75),
-                _MathSearchBar(
-                  onTap: () => _open(context, const ChatScreen()),
-                ),
-              ),
-              const SizedBox(height: AppSpace.xxl),
-              _entrance(
-                const Interval(0.15, 0.6),
+                const Interval(0.1, 0.5),
                 _HeroPanel(
                   reduceMotion: context.watch<AppController>().reduceMotion,
                   onSolve: () =>
                       _open(context, CameraScreen(mode: SolveMode.ai)),
+                  onTutor: () => _open(context, const ChatScreen()),
                 ),
               ),
               const SizedBox(height: AppSpace.lg),
               _entrance(
-                const Interval(0.25, 0.7),
-                _AiStatusCard(configured: configured),
+                const Interval(0.2, 0.6),
+                const _CapabilityStrip(),
               ),
               const SizedBox(height: AppSpace.xxxl),
               _entrance(
-                const Interval(0.4, 0.85),
-                const _SectionTitle('Explore tools'),
+                const Interval(0.35, 0.75),
+                const _SectionTitle('Choose how to solve'),
               ),
               const SizedBox(height: AppSpace.lg),
               _entrance(
-                const Interval(0.45, 0.9),
+                const Interval(0.45, 0.85),
                 _buildModeGrid(context),
               ),
               const SizedBox(height: AppSpace.xxxl),
               _entrance(
-                const Interval(0.6, 1.0),
+                const Interval(0.6, 0.95),
                 const _SectionTitle('Your space'),
               ),
               const SizedBox(height: AppSpace.lg),
@@ -148,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Snap & solve',
                   description: 'Full step-by-step solutions from a photo.',
                   icon: Icons.auto_awesome_rounded,
-                  accent: AppColors.aiViolet,
+                  gradient: const [AppColors.aiViolet, AppColors.aiVioletLight],
                   onTap: () =>
                       _open(context, CameraScreen(mode: SolveMode.ai)),
                 ),
@@ -160,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Check your work',
                   description: 'Score your written solution instantly.',
                   icon: Icons.fact_check_rounded,
-                  accent: AppColors.controlTeal,
+                  gradient: const [AppColors.controlTeal, AppColors.controlTealLight],
                   onTap: () => _open(
                     context,
                     CameraScreen(mode: SolveMode.control),
@@ -181,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Ask a tutor',
                   description: 'Free-form math help, no photo needed.',
                   icon: Icons.forum_rounded,
-                  accent: AppColors.chatPink,
+                  gradient: const [AppColors.chatPink, AppColors.chatPinkLight],
                   onTap: () => _open(context, const ChatScreen()),
                 ),
               ),
@@ -192,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen>
                   tagline: 'Offline tools',
                   description: 'Calculator, formulas and notes offline.',
                   icon: Icons.menu_book_rounded,
-                  accent: AppColors.noAiAmber,
+                  gradient: const [AppColors.noAiAmber, AppColors.noAiAmberLight],
                   onTap: () => _open(context, const NoAiHomeScreen()),
                 ),
               ),
@@ -208,9 +202,9 @@ class _HomeScreenState extends State<HomeScreen>
   }
 }
 
-/// Slim brand row with corner actions.
-class _BrandBar extends StatelessWidget {
-  const _BrandBar({required this.onHistory, required this.onSettings});
+/// Top brand bar with a logo mark and round corner actions.
+class _BrandHeader extends StatelessWidget {
+  const _BrandHeader({required this.onHistory, required this.onSettings});
 
   final VoidCallback onHistory;
   final VoidCallback onSettings;
@@ -221,6 +215,24 @@ class _BrandBar extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return Row(
       children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadii.md),
+            gradient: const LinearGradient(
+              colors: [AppColors.aiViolet, AppColors.controlTeal],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: const Icon(
+            Icons.auto_awesome_rounded,
+            color: Colors.white,
+            size: 24,
+          ),
+        ),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,11 +258,17 @@ class _BrandBar extends StatelessWidget {
         IconButton(
           tooltip: 'History',
           onPressed: onHistory,
+          style: IconButton.styleFrom(
+            backgroundColor: scheme.surfaceContainerHigh,
+          ),
           icon: const Icon(Icons.history_rounded),
         ),
         IconButton(
           tooltip: 'Settings',
           onPressed: onSettings,
+          style: IconButton.styleFrom(
+            backgroundColor: scheme.surfaceContainerHigh,
+          ),
           icon: const Icon(Icons.settings_rounded),
         ),
       ],
@@ -258,13 +276,12 @@ class _BrandBar extends StatelessWidget {
   }
 }
 
-/// Time-aware welcome line with a rotating math prompt.
+/// Time-aware welcome line with a rotating math prompt and the AI status.
 class _Greeting extends StatelessWidget {
   const _Greeting({required this.configured});
 
   final bool configured;
 
-  /// Rotating, light prompts shown under the greeting to make it feel alive.
   static const List<String> _prompts = [
     'What would you like to figure out today?',
     'Point your camera and let’s solve it together.',
@@ -284,7 +301,6 @@ class _Greeting extends StatelessWidget {
         : hour < 17
         ? 'Good afternoon'
         : 'Good evening';
-    // Roughly daily rotation so the line feels fresh but stable within a day.
     final prompt = configured
         ? _prompts[DateTime.now().day % _prompts.length]
         : _prompts[0];
@@ -311,39 +327,17 @@ class _Greeting extends StatelessWidget {
   }
 }
 
-/// Material 3 [SearchBar] that routes to the AI chat tutor.
-class _MathSearchBar extends StatelessWidget {
-  const _MathSearchBar({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return SearchBar(
-      onTap: onTap,
-      elevation: const WidgetStatePropertyAll(0),
-      leading: const Icon(Icons.search_rounded),
-      hintText: 'Ask a math question…',
-      trailing: [
-        IconButton(
-          tooltip: 'Ask',
-          onPressed: onTap,
-          icon: const Icon(Icons.auto_awesome_rounded),
-        ),
-      ],
-      backgroundColor: WidgetStatePropertyAll(
-        Theme.of(context).colorScheme.surfaceContainerHigh,
-      ),
-    );
-  }
-}
-
-/// Animated hero panel with a large camera CTA and a wave-cut bottom.
+/// Bold hero panel with two clear paths and soft animated ambience.
 class _HeroPanel extends StatefulWidget {
-  const _HeroPanel({required this.reduceMotion, required this.onSolve});
+  const _HeroPanel({
+    required this.reduceMotion,
+    required this.onSolve,
+    required this.onTutor,
+  });
 
   final bool reduceMotion;
   final VoidCallback onSolve;
+  final VoidCallback onTutor;
 
   @override
   State<_HeroPanel> createState() => _HeroPanelState();
@@ -385,7 +379,7 @@ class _HeroPanelState extends State<_HeroPanel>
     final surface = scheme.surface;
 
     return Container(
-      height: 360,
+      height: 380,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -396,7 +390,7 @@ class _HeroPanelState extends State<_HeroPanel>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(AppRadii.xl),
         boxShadow: [
           BoxShadow(
             color: scheme.primary.withValues(alpha: 0.35),
@@ -411,7 +405,7 @@ class _HeroPanelState extends State<_HeroPanel>
           _FloatingSymbols(controller: _float),
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 28),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -434,46 +428,34 @@ class _HeroPanelState extends State<_HeroPanel>
                       height: 1.4,
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 22),
                   Row(
                     children: [
-                      IconButton.filled(
-                        onPressed: widget.onSolve,
-                        icon: const Icon(Icons.camera_alt_rounded),
-                        iconSize: 32,
-                        tooltip: 'Start solving',
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size.square(74),
-                          backgroundColor: Colors.white,
-                          foregroundColor: scheme.primary,
-                          elevation: 6,
-                          shadowColor: Colors.black.withValues(alpha: 0.35),
-                          shape: const CircleBorder(),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: widget.onSolve,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: scheme.primary,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          icon: const Icon(Icons.camera_alt_rounded, size: 20),
+                          label: const Text('Solve'),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Start solving',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                        child: OutlinedButton.icon(
+                          onPressed: widget.onTutor,
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.5),
                             ),
-                            Text(
-                              'Tap the camera and snap a problem',
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.85),
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          icon: const Icon(Icons.forum_rounded, size: 20),
+                          label: const Text('Ask tutor'),
                         ),
                       ),
                     ],
@@ -524,6 +506,59 @@ class _HeroChip extends StatelessWidget {
       visualDensity: VisualDensity.compact,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+}
+
+/// Three quick "why we exist" tiles that sit right under the hero.
+class _CapabilityStrip extends StatelessWidget {
+  const _CapabilityStrip();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final items = [
+      (Icons.format_list_numbered_rounded, 'Step-by-step'),
+      (Icons.rate_review_rounded, 'Score your work'),
+      (Icons.offline_bolt_rounded, '0 AI needed'),
+    ];
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        border: Border.all(color: scheme.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          for (var i = 0; i < items.length; i++) ...[
+            if (i > 0)
+              Container(
+                width: 1,
+                height: 34,
+                color: scheme.outlineVariant,
+              )
+            else
+              const SizedBox(width: 0),
+            Expanded(
+              child: Column(
+                children: [
+                  Icon(items[i].$1, color: scheme.primary, size: 24),
+                  const SizedBox(height: 8),
+                  Text(
+                    items[i].$2,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: scheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -673,61 +708,6 @@ class _WavePainter extends CustomPainter {
   bool shouldRepaint(_WavePainter oldDelegate) => oldDelegate.color != color;
 }
 
-/// Material 3 tonal [Card] showing the AI provider readiness.
-class _AiStatusCard extends StatelessWidget {
-  const _AiStatusCard({required this.configured});
-
-  final bool configured;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final settings = context.watch<SettingsController>();
-
-    return Card(
-      color: configured
-          ? scheme.secondaryContainer
-          : scheme.errorContainer,
-      child: ListTile(
-        onTap: configured
-            ? null
-            : () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const SettingsScreen(),
-                  ),
-                ),
-        leading: Icon(
-          configured
-              ? Icons.check_circle_rounded
-              : Icons.warning_amber_rounded,
-          color: configured
-              ? scheme.onSecondaryContainer
-              : scheme.onErrorContainer,
-        ),
-        title: Text(
-          configured
-              ? '${settings.providerLabel} • ${_model(settings)}'
-              : 'Add an API key to unlock AI modes',
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: configured
-                ? scheme.onSecondaryContainer
-                : scheme.onErrorContainer,
-          ),
-        ),
-        trailing: configured
-            ? null
-            : Icon(Icons.chevron_right_rounded),
-      ),
-    );
-  }
-
-  String _model(SettingsController settings) => settings.settings.model.isEmpty
-      ? 'default model'
-      : settings.settings.model;
-}
-
 /// Section heading with a short accent bar.
 class _SectionTitle extends StatelessWidget {
   const _SectionTitle(this.title);
@@ -762,14 +742,14 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-/// Material 3 tonal [Card] for the 2-column mode grid.
+/// Tool card with a gradient icon tile and an arrow call-to-action.
 class _ModeCard extends StatelessWidget {
   const _ModeCard({
     required this.title,
     required this.tagline,
     required this.description,
     required this.icon,
-    required this.accent,
+    required this.gradient,
     required this.onTap,
   });
 
@@ -777,20 +757,15 @@ class _ModeCard extends StatelessWidget {
   final String tagline;
   final String description;
   final IconData icon;
-  final Color accent;
+  final List<Color> gradient;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
-    final background = Color.alphaBlend(
-      accent.withValues(alpha: 0.07),
-      scheme.surfaceContainerLow,
-    );
 
     return Card(
-      color: background,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadii.xl),
@@ -799,25 +774,25 @@ class _ModeCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 46,
-                    height: 46,
-                    decoration: BoxDecoration(
-                      color: accent.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(AppRadii.lg),
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: gradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(AppRadii.lg),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradient.first.withValues(alpha: 0.35),
+                      blurRadius: 14,
+                      offset: const Offset(0, 6),
                     ),
-                    child: Icon(icon, color: accent, size: 26),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    Icons.arrow_outward_rounded,
-                    color: scheme.onSurfaceVariant,
-                    size: 20,
-                  ),
-                ],
+                  ],
+                ),
+                child: Icon(icon, color: Colors.white, size: 26),
               ),
               const Spacer(),
               Text(
@@ -831,7 +806,7 @@ class _ModeCard extends StatelessWidget {
               Text(
                 tagline,
                 style: text.labelLarge?.copyWith(
-                  color: accent,
+                  color: gradient.first,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -842,6 +817,17 @@ class _ModeCard extends StatelessWidget {
                   color: scheme.onSurfaceVariant,
                   height: 1.3,
                 ),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  const Spacer(),
+                  Icon(
+                    Icons.arrow_circle_right_rounded,
+                    color: gradient.first,
+                    size: 26,
+                  ),
+                ],
               ),
             ],
           ),

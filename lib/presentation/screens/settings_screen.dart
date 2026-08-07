@@ -8,6 +8,7 @@ import '../../core/errors/app_exceptions.dart';
 import '../../data/datasources/remote/ai/ai_gateway_factory.dart';
 import '../../domain/entities/ai_provider.dart';
 import '../../domain/entities/ai_settings.dart';
+import '../../domain/entities/response_language.dart';
 import '../di/app_dependencies.dart';
 import '../state/app_controller.dart';
 import '../state/history_controller.dart';
@@ -238,6 +239,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 28),
 
+          // ── Response language ───────────────────────────────────────────
+          const _SectionTitle('Response language', Icons.translate_rounded),
+          const SizedBox(height: 12),
+          Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.translate_rounded),
+                  title: const Text('AI answers in'),
+                  subtitle: Text(
+                    '${settings.responseLanguage.displayName} · '
+                    '${settings.responseLanguage.label}',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => _pickResponseLanguage(
+                    settingsController,
+                    settings,
+                  ),
+                ),
+                const Divider(height: 1),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+                  child: Text(
+                    'The AI writes its steps, hints, feedback and chat replies '
+                    'in the language you pick. More languages are coming soon.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      height: 1.4,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 28),
+
           // ── Appearance ──────────────────────────────────────────────────
           const _SectionTitle('Appearance', Icons.palette_outlined),
           const SizedBox(height: 12),
@@ -442,6 +485,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ? AppConstants.defaultModelByProvider[current.provider.id] ?? ''
           : _modelController.text.trim(),
       baseUrl: _baseUrlController.text.trim(),
+      responseLanguage: current.responseLanguage,
     );
   }
 
@@ -451,6 +495,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Settings saved')));
+  }
+
+  Future<void> _pickResponseLanguage(
+    SettingsController controller,
+    AiSettings settings,
+  ) async {
+    final selected = await showModalBottomSheet<ResponseLanguage>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => LanguagePickerSheet(current: settings.responseLanguage),
+    );
+    if (selected == null || !mounted) return;
+    controller.update(settings.copyWith(responseLanguage: selected));
   }
 
   Future<void> _openModelPicker(SettingsController controller) async {
@@ -673,6 +731,107 @@ class _SectionTitle extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Searchable bottom sheet for picking an AI response language.
+class LanguagePickerSheet extends StatefulWidget {
+  const LanguagePickerSheet({super.key, required this.current});
+
+  /// The currently selected language, highlighted in the list.
+  final ResponseLanguage current;
+
+  @override
+  State<LanguagePickerSheet> createState() => _LanguagePickerSheetState();
+}
+
+class _LanguagePickerSheetState extends State<LanguagePickerSheet> {
+  final _search = TextEditingController();
+  String _query = '';
+
+  ResponseLanguage get _current => widget.current;
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  List<ResponseLanguage> get _visible {
+    final q = _query.trim().toLowerCase();
+    final languages = ResponseLanguage.values.toList();
+    if (q.isEmpty) return languages;
+    return languages.where((l) {
+      final hay = '${l.label} ${l.code} ${l.displayName}'.toLowerCase();
+      return hay.contains(q);
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.translate_rounded, color: scheme.primary),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'AI response language',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _search,
+              autofocus: true,
+              onChanged: (value) => setState(() => _query = value),
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.search_rounded),
+                hintText: 'Search languages…',
+                isDense: true,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  for (final lang in _visible)
+                    ListTile(
+                      dense: true,
+                      leading: const Icon(Icons.language_rounded, size: 20),
+                      title: Text(lang.displayName),
+                      subtitle: Text(lang.label),
+                      trailing: lang == _current
+                          ? const Icon(Icons.check_rounded)
+                          : null,
+                      onTap: () => Navigator.of(context).pop(lang),
+                    ),
+                ],
+              ),
+            ),
+            if (_visible.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: Center(child: Text('No matching languages.')),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

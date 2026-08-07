@@ -37,7 +37,10 @@ class AskFollowUpUseCase {
   Future<String> call(AskFollowUpParams params) async {
     return _resolveGateway(params.settings).generate(
       settings: params.settings,
-      system: "You are Solve 'em, a friendly math tutor.",
+      system: PromptTemplates.withLanguage(
+        "You are Solve 'em, a friendly math tutor.",
+        params.settings.responseLanguage,
+      ),
       userPrompt: PromptTemplates.followUpPrompt(
         problem: params.problem,
         solutionContext: params.solutionContext,

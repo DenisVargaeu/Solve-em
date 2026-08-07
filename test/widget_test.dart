@@ -60,11 +60,15 @@ void main() {
 
     expect(find.text("Solve 'em"), findsOneWidget);
     expect(find.text('Snap it.\nSolved it.'), findsOneWidget);
-    expect(find.text('Start solving'), findsOneWidget);
+    expect(find.text('Solve'), findsOneWidget);
+    expect(find.text('Ask tutor'), findsOneWidget);
     expect(find.text('AI Mode'), findsOneWidget);
     expect(find.text('Control'), findsOneWidget);
     expect(find.text('Chat'), findsOneWidget);
     expect(find.text('No AI'), findsOneWidget);
-    expect(find.text('Add an API key to unlock AI modes'), findsOneWidget);
+    expect(
+      find.text('Ready whenever you are — add an API key to go AI.'),
+      findsOneWidget,
+    );
   });
 }

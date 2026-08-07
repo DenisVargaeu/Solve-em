@@ -63,7 +63,10 @@ class CheckSolutionUseCase {
 
     final raw = await _resolveGateway(params.settings).generate(
       settings: params.settings,
-      system: PromptTemplates.systemCheck,
+      system: PromptTemplates.withLanguage(
+        PromptTemplates.systemCheck,
+        params.settings.responseLanguage,
+      ),
       userPrompt: PromptTemplates.checkUserPrompt(
         problemText: params.problemText,
         solutionText: solutionText,

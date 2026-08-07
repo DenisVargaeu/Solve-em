@@ -27,7 +27,10 @@ class ChatUseCase {
   Future<String> call(ChatParams params) async {
     return _resolveGateway(params.settings).generate(
       settings: params.settings,
-      system: PromptTemplates.chatSystem,
+      system: PromptTemplates.withLanguage(
+        PromptTemplates.chatSystem,
+        params.settings.responseLanguage,
+      ),
       userPrompt: PromptTemplates.chatUserPrompt(
         messages: params.messages
             .map((m) => (role: m.role.name, text: m.text))

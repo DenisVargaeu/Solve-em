@@ -31,6 +31,7 @@ abstract final class AppConstants {
   static const String prefsKeyBaseUrl = 'ai_base_url';
   static const String prefsKeyThemeMode = 'theme_mode';
   static const String prefsKeyOcrEnabled = 'ocr_enabled';
+  static const String prefsKeyResponseLanguage = 'response_language';
   static const String prefsKeyTextScale = 'text_scale';
   static const String prefsKeyReduceMotion = 'reduce_motion';
 

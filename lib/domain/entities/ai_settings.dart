@@ -1,6 +1,7 @@
 library;
 
 import 'ai_provider.dart';
+import 'response_language.dart';
 
 /// User-configured AI settings.
 ///
@@ -13,6 +14,7 @@ class AiSettings {
     this.apiKey = '',
     this.model = '',
     this.baseUrl = '',
+    this.responseLanguage = ResponseLanguage.english,
   });
 
   final AiProvider provider;
@@ -26,6 +28,9 @@ class AiSettings {
   /// Optional custom base URL (OpenAI-compatible providers only).
   final String baseUrl;
 
+  /// Language the AI should answer in.
+  final ResponseLanguage responseLanguage;
+
   /// Whether the user has everything needed to make an AI call.
   bool get isConfigured => apiKey.trim().isNotEmpty;
 
@@ -34,10 +39,12 @@ class AiSettings {
     String? apiKey,
     String? model,
     String? baseUrl,
+    ResponseLanguage? responseLanguage,
   }) => AiSettings(
     provider: provider ?? this.provider,
     apiKey: apiKey ?? this.apiKey,
     model: model ?? this.model,
     baseUrl: baseUrl ?? this.baseUrl,
+    responseLanguage: responseLanguage ?? this.responseLanguage,
   );
 }

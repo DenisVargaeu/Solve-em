@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/constants/app_constants.dart';
 import '../../domain/entities/ai_provider.dart';
 import '../../domain/entities/ai_settings.dart';
+import '../../domain/entities/response_language.dart';
 import '../../domain/repositories/settings_repository.dart';
 
 /// SharedPreferences-backed implementation of [SettingsRepository].
@@ -27,6 +28,9 @@ class SettingsRepositoryImpl implements SettingsRepository {
           AppConstants.defaultModelByProvider[provider.id] ??
           AppConstants.defaultModel,
       baseUrl: _prefs.getString(AppConstants.prefsKeyBaseUrl) ?? '',
+      responseLanguage: ResponseLanguage.fromCode(
+        _prefs.getString(AppConstants.prefsKeyResponseLanguage),
+      ),
     );
   }
 
@@ -38,6 +42,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
     await _prefs.setString(
       AppConstants.prefsKeyBaseUrl,
       settings.baseUrl.trim(),
+    );
+    await _prefs.setString(
+      AppConstants.prefsKeyResponseLanguage,
+      settings.responseLanguage.code,
     );
   }
 

@@ -1,5 +1,7 @@
 library;
 
+import '../../domain/entities/response_language.dart';
+
 /// Prompts sent to the AI models.
 ///
 /// Both the **AI Mode** and the **Control Mode** prompts ask for a single
@@ -12,6 +14,23 @@ library;
 
 abstract final class PromptTemplates {
   PromptTemplates._();
+
+  /// Appends a language instruction to a system prompt telling the model which
+  /// language to write its explanation in. English is the default, so no extra
+  /// line is added unless a non-English language is selected.
+  static String withLanguage(String system, ResponseLanguage language) {
+    if (language == ResponseLanguage.english) return system;
+    return '''
+$system
+
+IMPORTANT LANGUAGE RULE:
+The user selected ${language.nativeName} (${language.label}) for their answers.
+Write ALL prose — problem statements, step titles, explanations, hints,
+feedback and chat replies — in ${language.nativeName}. Keep the required output
+TAGS (e.g. {step1}, {answer}, {mistake}, {score}) unchanged and in the same
+format. Only the human-readable text should be in ${language.nativeName}.
+''';
+  }
 
   /// System prompt for the **AI Mode** (photo of a problem → full solution).
   static const String systemSolution = r'''

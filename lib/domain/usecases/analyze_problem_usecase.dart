@@ -61,7 +61,10 @@ class AnalyzeProblemUseCase {
 
     final raw = await _resolveGateway(params.settings).generate(
       settings: params.settings,
-      system: PromptTemplates.systemSolution,
+      system: PromptTemplates.withLanguage(
+        PromptTemplates.systemSolution,
+        params.settings.responseLanguage,
+      ),
       userPrompt: PromptTemplates.solutionUserPrompt(
         problemText: problemText,
         hasImage: usesImage,

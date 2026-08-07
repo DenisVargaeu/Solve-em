@@ -2,6 +2,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_dimensions.dart';
+
 /// In-app Privacy Policy page, reachable from Settings.
 
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -14,7 +16,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Privacy Policy')),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: AppSpace.screen,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

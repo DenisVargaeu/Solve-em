@@ -3,6 +3,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../../core/errors/app_exceptions.dart';
+import '../../core/theme/app_dimensions.dart';
 
 /// Lets the user pick a model from the provider's advertised model catalog.
 ///
@@ -126,7 +127,12 @@ class _ModelPickerSheetState extends State<ModelPickerSheet> {
       maxChildSize: 0.95,
       builder: (context, scrollController) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpace.lg,
+            0,
+            AppSpace.lg,
+            AppSpace.sm,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -154,7 +160,6 @@ class _ModelPickerSheetState extends State<ModelPickerSheet> {
                   prefixIcon: Icon(Icons.search_rounded),
                   hintText: 'Search models…',
                   isDense: true,
-                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 8),

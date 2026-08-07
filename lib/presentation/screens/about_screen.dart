@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_dimensions.dart';
 
 /// About screen: app identity, description and credits.
 
@@ -26,7 +27,7 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('About')),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        padding: AppSpace.screen,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -109,7 +110,7 @@ class AboutScreen extends StatelessWidget {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(AppRadii.lg),
                           ),
                           child: const Icon(
                             Icons.person_rounded,
@@ -185,7 +186,7 @@ class _AboutHero extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(AppRadii.xl),
         boxShadow: [
           BoxShadow(
             color: scheme.primary.withValues(alpha: 0.35),
@@ -227,7 +228,7 @@ class _AboutHero extends StatelessWidget {
                 height: 84,
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(26),
+                  borderRadius: BorderRadius.circular(AppRadii.xl),
                   border: Border.all(
                     color: Colors.white.withValues(alpha: 0.3),
                   ),
@@ -257,7 +258,7 @@ class _AboutHero extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(999),
+                  borderRadius: BorderRadius.circular(AppRadii.pill),
                 ),
                 child: Text(
                   'Version ${AppConstants.appVersion}',
@@ -338,7 +339,7 @@ class _AboutRow extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 color: accent.withValues(alpha: 0.16),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
               child: Icon(icon, color: accent, size: 20),
             ),
