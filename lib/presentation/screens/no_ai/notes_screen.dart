@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_dimensions.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../domain/entities/math_note.dart';
 import '../../state/notes_controller.dart';
@@ -41,7 +42,7 @@ class _NotesScreenState extends State<NotesScreen> {
               message: 'Tap the + button to write a math note.',
             )
           : ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+              padding: AppSpace.screen,
               itemCount: notes.length,
               separatorBuilder: (_, _) => const SizedBox(height: 10),
               itemBuilder: (context, index) => _NoteTile(
@@ -84,15 +85,15 @@ class _NoteTile extends StatelessWidget {
         padding: const EdgeInsets.only(right: 24),
         decoration: BoxDecoration(
           color: scheme.errorContainer,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
         ),
         child: Icon(Icons.delete_rounded, color: scheme.error),
       ),
       child: Material(
         color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(14),

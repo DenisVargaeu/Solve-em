@@ -2,6 +2,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_dimensions.dart';
+
 import '../../../data/formula_catalog.dart';
 import '../../../domain/entities/formula.dart';
 import '../../widgets/math_text.dart';
@@ -19,7 +21,7 @@ class FormulaLibraryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Formula Library')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+        padding: AppSpace.screen,
         children: [
           for (final group in groups) ...[
             _TopicHeader(group.key),
@@ -80,13 +82,13 @@ class _FormulaTileState extends State<_FormulaTile> {
       curve: Curves.easeOutCubic,
       decoration: BoxDecoration(
         color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
           onTap: () => setState(() => _expanded = !_expanded),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -124,7 +126,7 @@ class _FormulaTileState extends State<_FormulaTile> {
                   ),
                   decoration: BoxDecoration(
                     color: scheme.primaryContainer.withValues(alpha: 0.35),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppRadii.lg),
                   ),
                   child: MathText(
                     '\$\$ ${widget.formula.latex} \$\$',

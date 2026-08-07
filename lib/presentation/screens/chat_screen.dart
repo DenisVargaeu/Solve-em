@@ -3,6 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/chat_message.dart';
 import '../state/chat_controller.dart';
 import '../state/settings_controller.dart';
@@ -347,11 +348,11 @@ class _InputBar extends StatelessWidget {
                 filled: true,
                 fillColor: scheme.surfaceContainerHigh,
                 contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                  horizontal: AppSpace.lg,
+                  vertical: AppSpace.md,
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(AppRadii.xl),
                   borderSide: BorderSide.none,
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/ai_provider.dart';
 import '../../domain/entities/solved_problem.dart';
 import '../state/history_controller.dart';
@@ -42,7 +43,7 @@ class HistoryScreen extends StatelessWidget {
               'Solve a problem with AI Mode or Control Mode and it will appear here.',
         ),
         _ => ListView.separated(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+          padding: AppSpace.screen,
           itemCount: controller.problems.length,
           separatorBuilder: (_, _) => const SizedBox(height: 10),
           itemBuilder: (context, index) => _HistoryTile(
@@ -117,15 +118,15 @@ class _HistoryTile extends StatelessWidget {
         padding: const EdgeInsets.only(right: 24),
         decoration: BoxDecoration(
           color: scheme.errorContainer,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
         ),
         child: Icon(Icons.delete_rounded, color: scheme.error),
       ),
       child: Material(
         color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
           onTap: () => _open(context),
           child: Padding(
             padding: const EdgeInsets.all(14),

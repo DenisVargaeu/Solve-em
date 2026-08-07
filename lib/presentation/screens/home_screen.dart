@@ -258,11 +258,21 @@ class _BrandBar extends StatelessWidget {
   }
 }
 
-/// Time-aware welcome line with the configured AI ready state.
+/// Time-aware welcome line with a rotating math prompt.
 class _Greeting extends StatelessWidget {
   const _Greeting({required this.configured});
 
   final bool configured;
+
+  /// Rotating, light prompts shown under the greeting to make it feel alive.
+  static const List<String> _prompts = [
+    'What would you like to figure out today?',
+    'Point your camera and let’s solve it together.',
+    'How about checking your working with Control Mode?',
+    'Ask the tutor about anything that’s been bugging you.',
+    'From integrals to inequalities, I’m all ears.',
+    'Pick a mode below and let’s make math click.',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -274,6 +284,10 @@ class _Greeting extends StatelessWidget {
         : hour < 17
         ? 'Good afternoon'
         : 'Good evening';
+    // Roughly daily rotation so the line feels fresh but stable within a day.
+    final prompt = configured
+        ? _prompts[DateTime.now().day % _prompts.length]
+        : _prompts[0];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -287,9 +301,7 @@ class _Greeting extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          configured
-              ? 'What would you like to figure out today?'
-              : 'Ready whenever you are — add an API key to go AI.',
+          configured ? prompt : 'Ready whenever you are — add an API key to go AI.',
           style: text.bodyMedium?.copyWith(
             color: scheme.onSurfaceVariant,
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/theme/app_dimensions.dart';
 import '../../../domain/entities/solved_problem.dart';
 import '../../../domain/services/expression_evaluator.dart';
 import '../../state/history_controller.dart';
@@ -284,9 +285,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         child: FilledButton.tonal(
           onPressed: onTap,
           style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: AppSpace.md),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadii.lg),
             ),
           ),
           child: Text(
@@ -306,9 +307,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   ) {
     return Material(
       color: background,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(AppRadii.lg),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         onTap: () {
           HapticFeedback.lightImpact();
           onTap();

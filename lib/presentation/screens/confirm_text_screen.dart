@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/ai_provider.dart';
 import 'analyzing_screen.dart';
 
@@ -69,13 +70,13 @@ class _ConfirmTextScreenState extends State<ConfirmTextScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Check the text')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: AppSpace.screen,
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSpace.md),
             decoration: BoxDecoration(
               color: scheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppRadii.lg),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +111,6 @@ class _ConfirmTextScreenState extends State<ConfirmTextScreen> {
               hintText: detectedNothing
                   ? 'Start typing…'
                   : 'Edit the detected text if needed…',
-              border: const OutlineInputBorder(),
               alignLabelWithHint: true,
             ),
           ),
