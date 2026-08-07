@@ -1,5 +1,9 @@
 # Solve 'em
 
+<p align="center">
+  <img src="logo.png" alt="Solve 'em logo" width="160" />
+</p>
+
 An AI-powered math learning assistant. Point your camera at a math problem and
 get a step-by-step solution, or get your own working checked against a scored
 rubric — with a fully offline fallback mode for when you have no network.
