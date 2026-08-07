@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/errors/app_exceptions.dart';
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/solved_problem.dart';
 import '../../domain/services/markdown_solution_parser.dart';
 import '../../domain/usecases/ask_follow_up_usecase.dart';
@@ -50,7 +51,7 @@ class _SolutionScreenState extends State<SolutionScreen> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: AppSpace.screen,
         children: [
           _ProblemHeader(problem: problem),
           const SizedBox(height: 16),
@@ -212,10 +213,10 @@ class _ProblemHeader extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpace.lg),
       decoration: BoxDecoration(
         color: scheme.primaryContainer.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,7 +245,7 @@ class _ProblemHeader extends StatelessWidget {
           if (problem.imagePath != null) ...[
             const SizedBox(height: 12),
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadii.md),
               child: InkWell(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(

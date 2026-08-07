@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/mistake.dart';
 import '../../domain/entities/solved_problem.dart';
 import '../widgets/math_text.dart';
@@ -24,15 +25,15 @@ class CheckScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Check result')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: AppSpace.screen,
         children: [
           // ── Score headline ─────────────────────────────────────────────
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 24),
+            padding: const EdgeInsets.symmetric(vertical: AppSpace.xxl),
             decoration: BoxDecoration(
               color: scheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(AppRadii.xl),
               border: Border.all(
                 color: scheme.outlineVariant.withValues(alpha: 0.5),
               ),
@@ -206,10 +207,10 @@ class _MistakeCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: scheme.errorContainer.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: scheme.error.withValues(alpha: 0.4)),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: AppSpace.card,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
