@@ -1,75 +1,117 @@
-# Solve 'em
+# Solve-em
 
 <p align="center">
-  <img src="logo.png" alt="Solve 'em logo" width="160" />
+  <img src=".github/logo.png" alt="Solve-em logo" width="160" />
 </p>
 
-An AI-powered math learning assistant. Point your camera at a math problem and
-get a step-by-step solution, or get your own working checked against a scored
-rubric — with a fully offline fallback mode for when you have no network.
+[![Flutter](https://img.shields.io/badge/Flutter-UI-blue.svg)](https://flutter.dev/)
+[![Language](https://img.shields.io/badge/Dart-67%25-blue.svg)](https://dart.dev/)
+[![License](https://img.shields.io/badge/License-Add--your--license--here-lightgrey.svg)](#license)
+
+AI-powered math helper for Android phones — solve problems, get step-by-step explanations, and learn faster.
+
+> Note: Solve-em does not include an API key. Please provide your own API key for the AI service you prefer.
 
 ## Features
 
-- **AI Mode** — photograph a problem, OCR it, and get a structured,
-  step-by-step solution from an AI provider (OpenAI, OpenRouter, or Google
-  Gemini).
-- **Control Mode** — let the AI check *your* answer and mark each step, then
-  score it and reveal hints for the steps you missed.
-- **No AI Mode** — works entirely offline: a scientific-style calculator, a
-  formula library with rendered LaTeX, and sticky math notes.
-- **Ask a follow-up** on any AI solution and keep the whole conversation in
-  context.
-- **History** — every solved/checked problem is stored locally and can be
-  reopened or deleted.
-- **Settings** — choose provider and model, set your API key, switch dark/light
-  theme, toggle OCR on/off, and test the connection before you solve.
+- Solve arithmetic, algebra, calculus, and other math problems using an AI backend
+- Step-by-step explanations to help you learn
+- Clean, mobile-first UI built with Flutter (Dart)
+- Lightweight and easy to run on Android devices
 
-## Architecture
+## Screenshots
 
-Clean architecture with manual dependency injection (no codegen):
+Replace these with your actual screenshots in the `assets/` folder and update the paths.
 
-```
-lib/
-├── core/          constants, theme, exceptions, prompts, shared widgets
-├── domain/        entities, repositories, use cases, expression evaluator
-├── data/          Hive/local datasources, repository impls, OCR + AI gateways
-└── presentation/  DI container, controllers, screens, widgets
-```
-
-- OCR: Google ML Kit `TextRecognizer`
-- Storage: Hive (problems, notes), SharedPreferences (settings)
-- Math rendering: `flutter_math_fork`
+![Home Screen](docs/screenshots/home.png)
+![Solution View](docs/screenshots/solution.png)
 
 ## Getting started
 
-```sh
-flutter pub get
-flutter run
-```
+Prerequisites:
+- Flutter (>= 2.10) installed — https://flutter.dev/docs/get-started/install
+- Android SDK and an Android device or emulator
+- An API key for the AI service you want to use (e.g., OpenAI, your own server)
 
-No API key is bundled. Open **Settings** in the app and enter your own key for
-one of the supported providers:
+1. Clone the repo
+   git clone https://github.com/DenisVargaeu/Solve-em.git
+   cd Solve-em
 
-| Provider   | Model example                          |
-| ---------- | -------------------------------------- |
-| OpenAI     | `gpt-4o`                               |
-| OpenRouter | `meta-llama/llama-3.1-8b-instruct`     |
-| Gemini     | `gemini-1.5-flash`                     |
-| NVIDIA NIM | `qwen/qwen2-vl-72b-instruct`           |
+2. Install dependencies
+   flutter pub get
 
-Then use **Test connection** in Settings to verify before solving.
+## Configuration — supplying your API key
 
-## Platform notes
+This project intentionally doesn't include an API key. Pick one of the options below to provide your key locally (do not commit your key to Git).
 
-- **Android**: camera and gallery permissions are declared in
-  `android/app/src/main/AndroidManifest.xml`. Requires minSdk 24 (Flutter
-  default) to satisfy CameraX and ML Kit.
-- **iOS**: `NSCameraUsageDescription` and `NSPhotoLibraryUsageDescription`
-  are set in `ios/Runner/Info.plist`.
+Option A — dart-define (recommended for local builds)
+- Run the app with:
+  flutter run --dart-define=OPENAI_API_KEY="your_api_key_here"
 
-## Checks
+- Or for release builds:
+  flutter build apk --dart-define=OPENAI_API_KEY="your_api_key_here"
 
-```sh
-flutter analyze
-flutter test
-```
+Option B — local file (quick & dirty)
+- Create a file `lib/api_key.dart` (gitignored) with:
+  ```dart
+  // lib/api_key.dart
+  const String OPENAI_API_KEY = 'your_api_key_here';
+  ```
+- Import `OPENAI_API_KEY` where needed.
+
+Option C — flutter_dotenv (if you prefer environment files)
+- Add and configure `flutter_dotenv`, create a `.env` file, and load it in main.dart.
+- Ensure `.env` is in `.gitignore`.
+
+Whichever method you choose, the app expects the key to be available as `OPENAI_API_KEY` (adjust the code if you use a different name).
+
+## Running
+
+- Start an emulator or connect your Android device.
+- Run:
+  flutter run --dart-define=OPENAI_API_KEY="your_api_key_here"
+
+## Development
+
+- Code is primarily in Dart (Flutter). Other languages present in the repo are for native integrations or build tooling.
+- To add features: create a new branch, implement, test on device/emulator, and open a pull request.
+
+Suggested code layout:
+- lib/ — Flutter source
+- assets/ — images and other static assets
+- android/ and ios/ — native platform code
+- docs/ — screenshots and notes
+
+## Contributing
+
+Contributions are welcome! If you'd like to help:
+- Open an issue for large changes or feature requests
+- Fork, add your changes on a feature branch, and open a pull request
+- Keep API keys and secrets out of commits
+
+Coding style: follow Dart/Flutter idioms and run `flutter analyze` before opening a PR.
+
+## Privacy & API costs
+
+- Using an external AI API may send user input to third-party servers. Make this clear to end users.
+- API usage may incur costs. Provide guidance in-app or in the Play Store listing so users know about potential charges on their API accounts.
+
+## Troubleshooting
+
+- If the app fails to connect to the AI service: check that your API key is set correctly and your network connection is active.
+- If you see build errors: run `flutter doctor` and resolve any issues shown there.
+
+## Roadmap / Ideas
+
+- Add offline fallback heuristics for basic arithmetic
+- Support image input (camera) for handwritten problems
+- Add more granular explanation steps and practice mode
+- Publish to Google Play with an optional in-app configuration screen for API keys
+
+## License
+
+Add a LICENSE file to the repository and replace this section with the chosen license. For example, to use MIT, add an `LICENSE` file with MIT text and update the badge above.
+
+## Contact
+
+Created by Denis Vargaeu. If you want help improving this README or want me to commit it into the repo, tell me and I can create/update the file for you.
