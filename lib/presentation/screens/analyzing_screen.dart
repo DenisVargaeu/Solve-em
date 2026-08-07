@@ -3,6 +3,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/ai_provider.dart';
 import '../state/analysis_controller.dart';
 import '../state/settings_controller.dart';
@@ -83,15 +84,22 @@ class _AnalyzingScreenState extends State<AnalyzingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Consumer<AnalysisController>(
-            builder: (context, controller, _) {
-              if (controller.stage == AnalysisStage.error) {
-                return _buildError(context, controller);
-              }
-              return _buildProgress(context, controller);
-            },
+        // True centering in both axes, scrollable so the content never
+        // overflows on small screens or with large text scales.
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSpace.xxl),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Consumer<AnalysisController>(
+                builder: (context, controller, _) {
+                  if (controller.stage == AnalysisStage.error) {
+                    return _buildError(context, controller);
+                  }
+                  return _buildProgress(context, controller);
+                },
+              ),
+            ),
           ),
         ),
       ),
@@ -118,7 +126,7 @@ class _AnalyzingScreenState extends State<AnalyzingScreen> {
     };
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
@@ -170,7 +178,8 @@ class _AnalyzingScreenState extends State<AnalyzingScreen> {
   Widget _buildError(BuildContext context, AnalysisController controller) {
     final scheme = Theme.of(context).colorScheme;
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(Icons.error_outline_rounded, size: 64, color: scheme.error),
         const SizedBox(height: 16),

@@ -71,46 +71,58 @@ class _CreditSplash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _BrandBackground(
-      child: Column(
+      child: Stack(
         children: [
-          const Spacer(),
-          Text(
-            'Made by',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.85),
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 1.5,
+          // Truly centered credit block.
+          const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Made by',
+                  style: TextStyle(
+                    color: Color(0xD9FFFFFF),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Denis Varga',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'denisvarga.eu',
+                  style: TextStyle(
+                    color: Color(0xE6FFFFFF),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
-          const Text(
-            'Denis Varga',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'denisvarga.eu',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 32),
-            child: Text(
-              '${AppConstants.appName} · ${AppConstants.tagline}',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5),
-                fontSize: 12,
+          // Footer pinned to the bottom edge.
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 32,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Text(
+                '${AppConstants.appName} · ${AppConstants.tagline}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0x80FFFFFF),
+                  fontSize: 12,
+                ),
               ),
             ),
           ),
@@ -127,59 +139,60 @@ class _LogoSplash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _BrandBackground(
-      child: Column(
-        children: [
-          const Spacer(),
-          // Placeholder logo — replace with the real asset later.
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  blurRadius: 24,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: ShaderMask(
-              shaderCallback: (bounds) => LinearGradient(
-                colors: const [AppColors.aiViolet, AppColors.controlTeal],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ).createShader(bounds),
-              child: const Icon(
-                Icons.auto_awesome_rounded,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Placeholder logo — replace with the real asset later.
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
                 color: Colors.white,
-                size: 62,
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.25),
+                    blurRadius: 24,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: ShaderMask(
+                shaderCallback: (bounds) => LinearGradient(
+                  colors: const [AppColors.aiViolet, AppColors.controlTeal],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(bounds),
+                child: const Icon(
+                  Icons.auto_awesome_rounded,
+                  color: Colors.white,
+                  size: 62,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 30),
-          const Text(
-            AppConstants.appName,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 34,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.5,
+            const SizedBox(height: 30),
+            const Text(
+              AppConstants.appName,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 34,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            AppConstants.tagline,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.85),
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
+            const SizedBox(height: 10),
+            Text(
+              AppConstants.tagline,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.85),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          const Spacer(),
-        ],
+          ],
+        ),
       ),
     );
   }
