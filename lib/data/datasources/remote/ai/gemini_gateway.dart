@@ -54,7 +54,11 @@ class GeminiGateway implements AiGateway {
       'generationConfig': {'maxOutputTokens': 4096, 'temperature': 0.4},
     };
 
-    final response = await _http.postJson(url: url, body: body);
+    final response = await _http.postJson(
+      url: url,
+      body: body,
+      timeout: Duration(seconds: settings.requestTimeout),
+    );
     return _extractText(response);
   }
 
@@ -64,7 +68,10 @@ class GeminiGateway implements AiGateway {
         '${AppConstants.geminiBaseUrl}/models'
         '?key=${Uri.encodeComponent(settings.apiKey.trim())}'
         '&pageSize=200';
-    final json = await _http.getJson(url: url);
+    final json = await _http.getJson(
+      url: url,
+      timeout: Duration(seconds: settings.requestTimeout),
+    );
     final models = json['models'] as List?;
     if (models == null) return const [];
     return models

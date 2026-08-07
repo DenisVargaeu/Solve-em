@@ -15,6 +15,7 @@ class AiSettings {
     this.model = '',
     this.baseUrl = '',
     this.responseLanguage = ResponseLanguage.english,
+    this.requestTimeout = 60,
   });
 
   final AiProvider provider;
@@ -31,6 +32,9 @@ class AiSettings {
   /// Language the AI should answer in.
   final ResponseLanguage responseLanguage;
 
+  /// Request timeout in seconds for a single AI API call.
+  final int requestTimeout;
+
   /// Whether the user has everything needed to make an AI call.
   bool get isConfigured => apiKey.trim().isNotEmpty;
 
@@ -40,11 +44,13 @@ class AiSettings {
     String? model,
     String? baseUrl,
     ResponseLanguage? responseLanguage,
+    int? requestTimeout,
   }) => AiSettings(
     provider: provider ?? this.provider,
     apiKey: apiKey ?? this.apiKey,
     model: model ?? this.model,
     baseUrl: baseUrl ?? this.baseUrl,
     responseLanguage: responseLanguage ?? this.responseLanguage,
+    requestTimeout: requestTimeout ?? this.requestTimeout,
   );
 }

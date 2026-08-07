@@ -69,6 +69,7 @@ class OpenAiCompatibleGateway implements AiGateway {
       url: url,
       body: body,
       headers: headers,
+      timeout: Duration(seconds: settings.requestTimeout),
     );
     return _extractText(response);
   }
@@ -83,7 +84,11 @@ class OpenAiCompatibleGateway implements AiGateway {
       headers['Authorization'] = 'Bearer ${settings.apiKey.trim()}';
     }
 
-    final json = await _http.getJson(url: url, headers: headers);
+    final json = await _http.getJson(
+      url: url,
+      headers: headers,
+      timeout: Duration(seconds: settings.requestTimeout),
+    );
     final data = json['data'] as List?;
     if (data == null) return const [];
     return data

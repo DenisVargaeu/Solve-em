@@ -31,6 +31,9 @@ class SettingsRepositoryImpl implements SettingsRepository {
       responseLanguage: ResponseLanguage.fromCode(
         _prefs.getString(AppConstants.prefsKeyResponseLanguage),
       ),
+      requestTimeout:
+          _prefs.getInt(AppConstants.prefsKeyRequestTimeout) ??
+          AppConstants.defaultRequestTimeout,
     );
   }
 
@@ -46,6 +49,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
     await _prefs.setString(
       AppConstants.prefsKeyResponseLanguage,
       settings.responseLanguage.code,
+    );
+    await _prefs.setInt(
+      AppConstants.prefsKeyRequestTimeout,
+      settings.requestTimeout,
     );
   }
 

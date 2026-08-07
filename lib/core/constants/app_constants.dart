@@ -16,7 +16,7 @@ abstract final class AppConstants {
   static const String tagline = 'Snap it. Understand it. Master it.';
 
   /// Current app version, shown in Settings.
-  static const String appVersion = '1.7.0';
+  static const String appVersion = '1.7.5';
 
   /// Storage key of the Hive box that persists solved problems.
   static const String problemsBoxName = 'problems';
@@ -34,6 +34,7 @@ abstract final class AppConstants {
   static const String prefsKeyResponseLanguage = 'response_language';
   static const String prefsKeyTextScale = 'text_scale';
   static const String prefsKeyReduceMotion = 'reduce_motion';
+  static const String prefsKeyRequestTimeout = 'request_timeout';
 
   /// Default AI provider. OpenAI-compatible is the most common default.
   static const String defaultProvider = 'openai';
@@ -75,4 +76,7 @@ abstract final class AppConstants {
 
   /// Timeout for a single AI API request.
   static const Duration aiRequestTimeout = Duration(seconds: 60);
+
+  /// Default request timeout in seconds (used when not configured).
+  static const int defaultRequestTimeout = 60;
 }

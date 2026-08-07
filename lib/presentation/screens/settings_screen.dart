@@ -30,9 +30,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _apiKeyController = TextEditingController();
   final _modelController = TextEditingController();
   final _baseUrlController = TextEditingController();
+  final _timeoutController = TextEditingController();
 
   bool _obscureKey = true;
   bool _testing = false;
+  bool _advancedExpanded = false;
 
   @override
   void initState() {
@@ -45,6 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _apiKeyController.dispose();
     _modelController.dispose();
     _baseUrlController.dispose();
+    _timeoutController.dispose();
     super.dispose();
   }
 
@@ -52,6 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _apiKeyController.text = controller.settings.apiKey;
     _modelController.text = controller.settings.model;
     _baseUrlController.text = controller.settings.baseUrl;
+    _timeoutController.text = controller.settings.requestTimeout.toString();
   }
 
   @override
@@ -189,22 +193,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       label: const Text('Browse available models'),
                     ),
                   ),
-                  if (settings.provider == AiProvider.openai ||
-                      settings.provider == AiProvider.openrouter ||
-                      settings.provider == AiProvider.nvidia) ...[
-                    TextField(
-                      controller: _baseUrlController,
-                      autocorrect: false,
-                      decoration: const InputDecoration(
-                        labelText: 'Base URL (advanced)',
-                        hintText: 'https://api.openai.com/v1',
-                        prefixIcon: Icon(Icons.link_rounded),
-                      ),
-                      onChanged: (_) => _markDirty(settingsController),
-                    ),
-                  ],
                 ],
               ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // ── Advanced options ─────────────────────────────────────────────
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: ExpansionTile(
+              leading: const Icon(Icons.tune_rounded),
+              title: const Text(
+                'Advanced options',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              subtitle: const Text(
+                'Base URL and request timeout for your provider.',
+              ),
+              initiallyExpanded: _advancedExpanded,
+              onExpansionChanged: (expanded) =>
+                  setState(() => _advancedExpanded = expanded),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Column(
+                    children: [
+                      if (settings.provider == AiProvider.openai ||
+                          settings.provider == AiProvider.openrouter ||
+                          settings.provider == AiProvider.nvidia) ...[
+                        TextField(
+                          controller: _baseUrlController,
+                          autocorrect: false,
+                          decoration: const InputDecoration(
+                            labelText: 'Base URL',
+                            hintText: 'https://api.openai.com/v1',
+                            prefixIcon: Icon(Icons.link_rounded),
+                          ),
+                          onChanged: (_) => _markDirty(settingsController),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                      TextField(
+                        controller: _timeoutController,
+                        autocorrect: false,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Request timeout (seconds)',
+                          helperText: 'Default is 60 s. Between 10 and 600.',
+                          prefixIcon: Icon(Icons.timer_outlined),
+                        ),
+                        onChanged: (_) => _markDirty(settingsController),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 12),
@@ -317,29 +361,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                       ),
-                      SegmentedButton<ThemeMode>(
-                        showSelectedIcon: false,
-                        segments: const [
-                          ButtonSegment(
-                            value: ThemeMode.system,
-                            label: Text('System'),
-                            icon: Icon(Icons.brightness_auto_rounded, size: 18),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: SegmentedButton<ThemeMode>(
+                            showSelectedIcon: false,
+                            segments: const [
+                              ButtonSegment(
+                                value: ThemeMode.system,
+                                label: Text('System'),
+                                icon: Icon(
+                                  Icons.brightness_auto_rounded,
+                                  size: 18,
+                                ),
+                              ),
+                              ButtonSegment(
+                                value: ThemeMode.light,
+                                label: Text('Light'),
+                                icon: Icon(Icons.light_mode_rounded, size: 18),
+                              ),
+                              ButtonSegment(
+                                value: ThemeMode.dark,
+                                label: Text('Dark'),
+                                icon: Icon(Icons.dark_mode_rounded, size: 18),
+                              ),
+                            ],
+                            selected: {appController.themeMode},
+                            onSelectionChanged: (selection) {
+                              appController.setThemeMode(selection.first);
+                            },
                           ),
-                          ButtonSegment(
-                            value: ThemeMode.light,
-                            label: Text('Light'),
-                            icon: Icon(Icons.light_mode_rounded, size: 18),
-                          ),
-                          ButtonSegment(
-                            value: ThemeMode.dark,
-                            label: Text('Dark'),
-                            icon: Icon(Icons.dark_mode_rounded, size: 18),
-                          ),
-                        ],
-                        selected: {appController.themeMode},
-                        onSelectionChanged: (selection) {
-                          appController.setThemeMode(selection.first);
-                        },
+                        ),
                       ),
                     ],
                   ),
@@ -363,17 +416,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                       ),
-                      SegmentedButton<double>(
-                        showSelectedIcon: false,
-                        segments: const [
-                          ButtonSegment(value: 0.85, label: Text('Small')),
-                          ButtonSegment(value: 1.0, label: Text('Default')),
-                          ButtonSegment(value: 1.15, label: Text('Large')),
-                        ],
-                        selected: {appController.textScale},
-                        onSelectionChanged: (selection) {
-                          appController.setTextScale(selection.first);
-                        },
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: SegmentedButton<double>(
+                            showSelectedIcon: false,
+                            segments: const [
+                              ButtonSegment(value: 0.85, label: Text('Small')),
+                              ButtonSegment(value: 1.0, label: Text('Default')),
+                              ButtonSegment(value: 1.15, label: Text('Large')),
+                            ],
+                            selected: {appController.textScale},
+                            onSelectionChanged: (selection) {
+                              appController.setTextScale(selection.first);
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -486,7 +545,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           : _modelController.text.trim(),
       baseUrl: _baseUrlController.text.trim(),
       responseLanguage: current.responseLanguage,
+      requestTimeout: _parseTimeout(),
     );
+  }
+
+  int _parseTimeout() {
+    final value = int.tryParse(_timeoutController.text.trim());
+    if (value == null || value < 10) return AppConstants.defaultRequestTimeout;
+    return value > 600 ? 600 : value;
   }
 
   Future<void> _save(SettingsController controller) async {

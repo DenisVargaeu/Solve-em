@@ -23,11 +23,12 @@ class AiHttpClient {
   Future<Map<String, dynamic>> getJson({
     required String url,
     Map<String, String> headers = const {},
+    Duration? timeout,
   }) async {
     try {
       final response = await _client
           .get(Uri.parse(url), headers: headers)
-          .timeout(AppConstants.aiRequestTimeout);
+          .timeout(timeout ?? AppConstants.aiRequestTimeout);
       return _handle(response);
     } on AiApiException {
       rethrow;
@@ -43,6 +44,7 @@ class AiHttpClient {
     required String url,
     required Map<String, dynamic> body,
     Map<String, String> headers = const {},
+    Duration? timeout,
   }) async {
     try {
       final response = await _client
@@ -51,7 +53,7 @@ class AiHttpClient {
             headers: {'Content-Type': 'application/json', ...headers},
             body: jsonEncode(body),
           )
-          .timeout(AppConstants.aiRequestTimeout);
+          .timeout(timeout ?? AppConstants.aiRequestTimeout);
       return _handle(response);
     } on AiApiException {
       rethrow;
