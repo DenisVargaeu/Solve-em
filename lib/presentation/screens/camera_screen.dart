@@ -343,7 +343,7 @@ class _CameraScreenState extends State<CameraScreen>
                         children: [
                           Icon(
                             Icons.tips_and_updates_rounded,
-                            color: Colors.amber,
+                            color: const Color(0xFF84CC16),
                           ),
                           SizedBox(width: 10),
                           Expanded(
@@ -541,7 +541,7 @@ class _RoundIconButton extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Icon(icon, color: active ? Colors.amber : Colors.white),
+          child: Icon(icon, color: active ? const Color(0xFF84CC16) : Colors.white),
         ),
       ),
     );

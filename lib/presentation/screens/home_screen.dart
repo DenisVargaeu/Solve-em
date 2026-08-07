@@ -384,7 +384,7 @@ class _HeroPanelState extends State<_HeroPanel>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color.lerp(scheme.primary, const Color(0xFF312E81), 0.35)!,
+            Color.lerp(scheme.primary, const Color(0xFF14532D), 0.35)!,
             Color.lerp(scheme.primary, scheme.tertiary, 0.55)!,
           ],
           begin: Alignment.topLeft,
@@ -590,7 +590,7 @@ class _AmbientBlobs extends StatelessWidget {
               bottom: -30 + math.sin(t) * 12,
               child: _Blob(
                 size: 210,
-                color: Colors.deepPurple.withValues(alpha: 0.22),
+                color: const Color(0xFF166534).withValues(alpha: 0.22),
               ),
             ),
           ],

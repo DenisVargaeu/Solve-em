@@ -180,7 +180,7 @@ class _AboutHero extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color.lerp(scheme.primary, const Color(0xFF312E81), 0.35)!,
+            Color.lerp(scheme.primary, const Color(0xFF14532D), 0.35)!,
             Color.lerp(scheme.primary, scheme.tertiary, 0.55)!,
           ],
           begin: Alignment.topLeft,

@@ -210,23 +210,23 @@ class _HistoryTile extends StatelessWidget {
   Color _scoreColor(ColorScheme scheme) => problem.score >= 85
       ? const Color(0xFF2E7D32)
       : problem.score >= 60
-      ? const Color(0xFFF9A825)
+      ? const Color(0xFF84CC16)
       : scheme.error;
 
   ({Color color, IconData icon, String label}) _modeBadge(SolveMode mode) {
     return switch (mode) {
       SolveMode.ai => (
-        color: const Color(0xFF7C4DFF),
+        color: const Color(0xFF22C55E),
         icon: Icons.auto_awesome_rounded,
         label: 'AI Mode',
       ),
       SolveMode.control => (
-        color: const Color(0xFF00897B),
+        color: const Color(0xFF14B8A6),
         icon: Icons.fact_check_rounded,
         label: 'Control Mode',
       ),
       SolveMode.noAi => (
-        color: const Color(0xFFF9A825),
+        color: const Color(0xFF84CC16),
         icon: Icons.menu_book_rounded,
         label: 'No AI Mode',
       ),

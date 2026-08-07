@@ -9,7 +9,7 @@ import '../../core/theme/app_colors.dart';
 import 'home_screen.dart';
 
 /// Startup sequence: a short "Made by Denis Varga" credit splash, then the
-/// branded splash with the (placeholder) logo, then the home screen.
+/// branded splash with the app logo, then the home screen.
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -132,7 +132,7 @@ class _CreditSplash extends StatelessWidget {
   }
 }
 
-/// Second stage: app name with a placeholder logo.
+/// Second stage: app name with the brand logo.
 class _LogoSplash extends StatelessWidget {
   const _LogoSplash({super.key});
 
@@ -143,10 +143,10 @@ class _LogoSplash extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Placeholder logo — replace with the real asset later.
             Container(
-              width: 120,
-              height: 120,
+              width: 140,
+              height: 140,
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(32),
@@ -158,16 +158,11 @@ class _LogoSplash extends StatelessWidget {
                   ),
                 ],
               ),
-              child: ShaderMask(
-                shaderCallback: (bounds) => LinearGradient(
-                  colors: const [AppColors.aiViolet, AppColors.controlTeal],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ).createShader(bounds),
-                child: const Icon(
-                  Icons.auto_awesome_rounded,
-                  color: Colors.white,
-                  size: 62,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -210,7 +205,7 @@ class _BrandBackground extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.aiViolet, Color(0xFF5B5BEF)],
+            colors: [AppColors.aiViolet, Color(0xFF16A34A)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

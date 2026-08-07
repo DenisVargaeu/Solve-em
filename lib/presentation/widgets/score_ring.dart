@@ -18,7 +18,7 @@ class ScoreRing extends StatelessWidget {
 
   Color _color(ColorScheme scheme) {
     if (score >= 85) return const Color(0xFF2E7D32);
-    if (score >= 60) return const Color(0xFFF9A825);
+    if (score >= 60) return const Color(0xFF84CC16);
     return scheme.error;
   }
 

@@ -125,7 +125,7 @@ class CheckScreen extends StatelessWidget {
             SectionCard(
               icon: Icons.lightbulb_rounded,
               title: 'Hint',
-              titleColor: const Color(0xFFF9A825),
+              titleColor: const Color(0xFF84CC16),
               child: _HintReveal(text: problem.hint),
             ),
             const SizedBox(height: 16),

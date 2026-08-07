@@ -83,7 +83,7 @@ class _ConfirmTextScreenState extends State<ConfirmTextScreen> {
               children: [
                 const Icon(
                   Icons.document_scanner_rounded,
-                  color: Colors.amber,
+                  color: const Color(0xFF84CC16),
                   size: 20,
                 ),
                 const SizedBox(width: 10),

@@ -10,7 +10,7 @@ import 'app_dimensions.dart';
 ///
 /// Component themes are centralised here so the whole app shares one cohesive
 /// M3 look: tonal surfaces, pill buttons, rounded input fields, consistent
-/// chip/dialog/list-tile styling and a calm violet colour system.
+/// chip/dialog/list-tile styling and a calm green colour system.
 
 abstract final class AppTheme {
   AppTheme._();
