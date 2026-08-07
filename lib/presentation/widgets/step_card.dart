@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_dimensions.dart';
 import '../../domain/entities/solution_step.dart';
 import 'math_text.dart';
 
@@ -37,16 +38,19 @@ class _StepCardState extends State<StepCard> {
       curve: Curves.easeOutCubic,
       decoration: BoxDecoration(
         color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
           onTap: () => setState(() => _expanded = !_expanded),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpace.lg,
+              vertical: AppSpace.md,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

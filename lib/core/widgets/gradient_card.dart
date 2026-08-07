@@ -2,6 +2,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../theme/app_dimensions.dart';
+
 /// A large, rounded gradient card used on the Home screen and as a general
 /// hero-style call-to-action tile.
 
@@ -46,12 +48,14 @@ class GradientCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconSize = hero ? 68.0 : 56.0;
     final iconRadius = hero ? 22.0 : 18.0;
-    final padding = hero ? const EdgeInsets.all(24) : const EdgeInsets.all(20);
+    final padding = hero
+        ? const EdgeInsets.all(AppSpace.xxl)
+        : const EdgeInsets.all(AppSpace.xl);
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppRadii.xl),
         child: Ink(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -59,7 +63,7 @@ class GradientCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(AppRadii.xl),
             boxShadow: [
               BoxShadow(
                 color: colors.last.withValues(alpha: 0.35),

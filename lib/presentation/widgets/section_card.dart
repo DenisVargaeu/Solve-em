@@ -2,6 +2,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import '../../core/theme/app_dimensions.dart';
+
 /// A titled card section used throughout the Solution screen.
 
 class SectionCard extends StatelessWidget {
@@ -23,10 +25,10 @@ class SectionCard extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: AppSpace.card,
       decoration: BoxDecoration(
         color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.5)),
       ),
       child: Column(
