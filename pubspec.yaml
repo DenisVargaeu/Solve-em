@@ -1,4 +1,4 @@
-name: ai_photomat
+name: solveem
 description: "Solve 'em - an AI-powered math learning assistant. Photograph a math problem and get step-by-step solutions, or get your own work checked."
 publish_to: 'none'
 version: 1.7.6+11

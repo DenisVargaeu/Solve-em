@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.photomat.ai_photomat"
+    namespace = "eu.denisvarga.solveem"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
