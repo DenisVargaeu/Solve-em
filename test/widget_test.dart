@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ai_photomat/domain/entities/ai_settings.dart';
-import 'package:ai_photomat/domain/repositories/settings_repository.dart';
-import 'package:ai_photomat/presentation/screens/home_screen.dart';
-import 'package:ai_photomat/presentation/state/app_controller.dart';
-import 'package:ai_photomat/presentation/state/settings_controller.dart';
+import 'package:solveem/domain/entities/ai_settings.dart';
+import 'package:solveem/domain/repositories/settings_repository.dart';
+import 'package:solveem/presentation/screens/home_screen.dart';
+import 'package:solveem/presentation/state/app_controller.dart';
+import 'package:solveem/presentation/state/settings_controller.dart';
 
 class _FakeSettingsRepository implements SettingsRepository {
   @override

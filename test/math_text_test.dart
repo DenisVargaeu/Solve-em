@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ai_photomat/presentation/widgets/math_text.dart';
+import 'package:solveem/presentation/widgets/math_text.dart';
 
 Finder _mathWidgets() =>
     find.byWidgetPredicate((w) => w.runtimeType.toString() == 'Math');

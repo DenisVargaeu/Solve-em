@@ -1,9 +1,9 @@
 library;
 
-import 'package:ai_photomat/domain/entities/ai_settings.dart';
-import 'package:ai_photomat/domain/entities/chat_message.dart';
-import 'package:ai_photomat/domain/usecases/chat_usecase.dart';
-import 'package:ai_photomat/presentation/state/chat_controller.dart';
+import 'package:solveem/domain/entities/ai_settings.dart';
+import 'package:solveem/domain/entities/chat_message.dart';
+import 'package:solveem/domain/usecases/chat_usecase.dart';
+import 'package:solveem/presentation/state/chat_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeChatUseCase extends ChatUseCase {

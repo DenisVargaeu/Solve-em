@@ -1,6 +1,6 @@
 library;
 
-import 'package:ai_photomat/domain/services/markdown_check_parser.dart';
+import 'package:solveem/domain/services/markdown_check_parser.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
