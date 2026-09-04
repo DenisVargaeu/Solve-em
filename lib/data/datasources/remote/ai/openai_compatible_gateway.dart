@@ -1,11 +1,11 @@
 library;
 
-import 'package:ai_photomat/core/constants/app_constants.dart';
-import 'package:ai_photomat/core/errors/app_exceptions.dart';
-import 'package:ai_photomat/core/utils/image_utils.dart';
-import 'package:ai_photomat/domain/entities/ai_provider.dart';
-import 'package:ai_photomat/domain/entities/ai_settings.dart';
-import 'package:ai_photomat/domain/repositories/ai_gateway.dart';
+import 'package:solveem/core/constants/app_constants.dart';
+import 'package:solveem/core/errors/app_exceptions.dart';
+import 'package:solveem/core/utils/image_utils.dart';
+import 'package:solveem/domain/entities/ai_provider.dart';
+import 'package:solveem/domain/entities/ai_settings.dart';
+import 'package:solveem/domain/repositories/ai_gateway.dart';
 
 import 'ai_http_client.dart';
 

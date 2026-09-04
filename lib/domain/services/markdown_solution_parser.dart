@@ -1,7 +1,7 @@
 library;
 
-import 'package:ai_photomat/domain/entities/ai_analysis_result.dart';
-import 'package:ai_photomat/domain/entities/solution_step.dart';
+import 'package:solveem/domain/entities/ai_analysis_result.dart';
+import 'package:solveem/domain/entities/solution_step.dart';
 
 /// Parses the **AI Mode** model output when the model answers in Markdown with
 /// custom tags instead of strict JSON.

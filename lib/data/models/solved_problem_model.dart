@@ -1,9 +1,9 @@
 library;
 
-import 'package:ai_photomat/domain/entities/ai_provider.dart';
-import 'package:ai_photomat/domain/entities/mistake.dart';
-import 'package:ai_photomat/domain/entities/solved_problem.dart';
-import 'package:ai_photomat/domain/entities/solution_step.dart';
+import 'package:solveem/domain/entities/ai_provider.dart';
+import 'package:solveem/domain/entities/mistake.dart';
+import 'package:solveem/domain/entities/solved_problem.dart';
+import 'package:solveem/domain/entities/solution_step.dart';
 
 /// Serialization adapter between [SolvedProblem] and the plain maps Hive
 /// stores. Keeps the domain entity free of any persistence concerns.

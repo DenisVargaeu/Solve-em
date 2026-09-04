@@ -1,9 +1,9 @@
 library;
 
-import 'package:ai_photomat/domain/entities/solved_problem.dart';
-import 'package:ai_photomat/domain/repositories/problem_repository.dart';
-import 'package:ai_photomat/data/models/solved_problem_model.dart';
-import 'package:ai_photomat/data/datasources/local/problem_local_datasource.dart';
+import 'package:solveem/domain/entities/solved_problem.dart';
+import 'package:solveem/domain/repositories/problem_repository.dart';
+import 'package:solveem/data/models/solved_problem_model.dart';
+import 'package:solveem/data/datasources/local/problem_local_datasource.dart';
 
 /// Hive-backed implementation of [ProblemRepository].
 

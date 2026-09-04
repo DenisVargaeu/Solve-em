@@ -1,14 +1,14 @@
 library;
 
-import 'package:ai_photomat/core/constants/prompt_templates.dart';
-import 'package:ai_photomat/core/errors/app_exceptions.dart';
-import 'package:ai_photomat/core/utils/json_parser.dart';
-import 'package:ai_photomat/domain/entities/ai_analysis_result.dart';
-import 'package:ai_photomat/domain/entities/ai_settings.dart';
-import 'package:ai_photomat/domain/entities/solution_step.dart';
-import 'package:ai_photomat/domain/repositories/ai_gateway.dart';
-import 'package:ai_photomat/domain/repositories/ocr_gateway.dart';
-import 'package:ai_photomat/domain/services/markdown_solution_parser.dart';
+import 'package:solveem/core/constants/prompt_templates.dart';
+import 'package:solveem/core/errors/app_exceptions.dart';
+import 'package:solveem/core/utils/json_parser.dart';
+import 'package:solveem/domain/entities/ai_analysis_result.dart';
+import 'package:solveem/domain/entities/ai_settings.dart';
+import 'package:solveem/domain/entities/solution_step.dart';
+import 'package:solveem/domain/repositories/ai_gateway.dart';
+import 'package:solveem/domain/repositories/ocr_gateway.dart';
+import 'package:solveem/domain/services/markdown_solution_parser.dart';
 
 /// Parameters for an AI-mode analysis.
 class AnalyzeProblemParams {

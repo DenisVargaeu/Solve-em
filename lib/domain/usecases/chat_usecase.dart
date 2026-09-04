@@ -1,9 +1,9 @@
 library;
 
-import 'package:ai_photomat/core/constants/prompt_templates.dart';
-import 'package:ai_photomat/domain/entities/ai_settings.dart';
-import 'package:ai_photomat/domain/entities/chat_message.dart';
-import 'package:ai_photomat/domain/repositories/ai_gateway.dart';
+import 'package:solveem/core/constants/prompt_templates.dart';
+import 'package:solveem/domain/entities/ai_settings.dart';
+import 'package:solveem/domain/entities/chat_message.dart';
+import 'package:solveem/domain/repositories/ai_gateway.dart';
 
 /// Parameters for a chat turn.
 class ChatParams {

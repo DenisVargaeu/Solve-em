@@ -1,9 +1,9 @@
 library;
 
-import 'package:ai_photomat/core/errors/app_exceptions.dart';
-import 'package:ai_photomat/domain/entities/ai_provider.dart';
-import 'package:ai_photomat/domain/entities/ai_settings.dart';
-import 'package:ai_photomat/domain/repositories/ai_gateway.dart';
+import 'package:solveem/core/errors/app_exceptions.dart';
+import 'package:solveem/domain/entities/ai_provider.dart';
+import 'package:solveem/domain/entities/ai_settings.dart';
+import 'package:solveem/domain/repositories/ai_gateway.dart';
 
 import 'gemini_gateway.dart';
 import 'openai_compatible_gateway.dart';

@@ -1,7 +1,7 @@
 library;
 
-import 'package:ai_photomat/domain/entities/mistake.dart';
-import 'package:ai_photomat/domain/entities/solution_check_result.dart';
+import 'package:solveem/domain/entities/mistake.dart';
+import 'package:solveem/domain/entities/solution_check_result.dart';
 
 /// Parses the **Control Mode** model output when the model answers in Markdown
 /// with custom tags instead of strict JSON.
